@@ -30,7 +30,7 @@ class Policy(object):
     def _build_graph(self):
         """ Build and initialize TensorFlow graph
             Initialize graph with all functions beginning with a dash
-            except sample() and update are used in train.py for sampling and updating
+            except sample() and update are used in reach.py for sampling and updating
         """
 
         self.g = tf.Graph()     # create a new empty graph
