@@ -25,18 +25,20 @@ This implementation learns policies for continuous environments
 in the OpenAI Gym (https://gym.openai.com/). Testing was focused on
 the MuJoCo control tasks.
 """
-import gym
-import numpy as np
-from gym import wrappers
-from policy import Policy
-from value_function import NNValueFunction
-import scipy.signal
-from utils import Logger, Scaler
-from datetime import datetime
-import os
 import argparse
+import datetime
+import os
 import signal
 
+import gym
+import numpy as np
+import scipy.signal
+
+from plot_ import Plot
+from policy import Policy
+from utils import Logger, Scaler
+from value_function import NNValueFunction
+import matplotlib.pyplot as plt
 
 class GracefulKiller:
     """ Gracefully exit program on CTRL-C """
@@ -70,7 +72,7 @@ def init_gym(env_name):
     return env, obs_dim, act_dim
 
 
-def run_episode(env, policy, scaler, animate=True):
+def run_episode(env, policy, scaler, animate=False):
     """ Run single episode with option to animate
 
     Args:
@@ -94,8 +96,7 @@ def run_episode(env, policy, scaler, animate=True):
     offset[-1] = 0.0  # don't offset time step feature
     while not done:
         if animate:
-            # env.render()
-            pass
+            env.render()
         obs = obs.astype(np.float64).reshape((1, -1))
         obs = np.append(obs, [[step]], axis=1)  # add time step feature
         unscaled_obs.append(obs)
@@ -109,11 +110,12 @@ def run_episode(env, policy, scaler, animate=True):
         rewards.append(reward)
         step += 1e-3  # increment time step feature
 
+    success_rate = rewards.count(-0.0) / len(rewards)
     return (np.concatenate(observes), np.concatenate(actions),
-            np.array(rewards, dtype=np.float64), np.concatenate(unscaled_obs))
+            np.array(rewards, dtype=np.float64), np.concatenate(unscaled_obs), success_rate)
 
 
-def run_policy(env, policy, scaler, logger, episodes):
+def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
     """ Run policy and collect data for a minimum of min_steps and min_episodes
 
     Args:
@@ -132,18 +134,25 @@ def run_policy(env, policy, scaler, logger, episodes):
     """
     total_steps = 0
     trajectories = []
+    success_rates = []
     for e in range(episodes):
-        observes, actions, rewards, unscaled_obs = run_episode(env, policy, scaler)
+        observes, actions, rewards, unscaled_obs, success_rate = run_episode(env, policy, scaler)
         total_steps += observes.shape[0]
         trajectory = {'observes': observes,
                       'actions': actions,
                       'rewards': rewards,
                       'unscaled_obs': unscaled_obs}
         trajectories.append(trajectory)
+        success_rates.append(success_rate)
     unscaled = np.concatenate([t['unscaled_obs'] for t in trajectories])
     scaler.update(unscaled)  # update running statistics for scaling observations
+
     logger.log({'_MeanReward': np.mean([t['rewards'].sum() for t in trajectories]),
                 'Steps': total_steps})
+
+    if plot:
+        plotter.updateMeanR(np.mean([t['rewards'].sum() for t in trajectories]))
+        plotter.updateSuccessR(np.mean(success_rates))
 
     return trajectories
 
@@ -274,19 +283,21 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name="Hopper-v2"):
     killer = GracefulKiller()
     env, obs_dim, act_dim = init_gym(env_name)
     obs_dim += 1  # add 1 to obs dimension for time step feature (see run_episode())
-    now = datetime.utcnow().strftime("%b-%d_%H:%M:%S")  # create unique directories
+    now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime("%b-%d_%H:%M:%S")  # create dictionaries based on ets time
     logger = Logger(logname=env_name, now=now)
+    plotter = Plot(plotname=env_name+"-Fig", now=now)
     aigym_path = os.path.join('/tmp', env_name, now)
     # env = wrappers.Monitor(env, aigym_path, force=True)  # recording, dir??
     scaler = Scaler(obs_dim)        # obs_dim=377
     val_func = NNValueFunction(obs_dim)
     policy = Policy(obs_dim, act_dim, kl_targ)  # kl target=0.003 by default
     # run a few episodes of untrained policy to initialize scaler:
-    run_policy(env, policy, scaler, logger, episodes=5)
+    run_policy(env, policy, scaler, logger, plotter, episodes=5, plot=False)
     episode = 0
     while episode < num_episodes:
-        trajectories = run_policy(env, policy, scaler, logger, episodes=batch_size)
+        trajectories = run_policy(env, policy, scaler, logger, plotter, episodes=batch_size)
         episode += len(trajectories)    # length of trajectories equals batch size which by default is 20
+        plotter.updateEpisodes(episode)
         add_value(trajectories, val_func)  # add estimated values to episodes
         add_disc_sum_rew(trajectories, gamma)  # calculated discounted sum of Rs
         add_gae(trajectories, gamma, lam)  # calculate advantage
@@ -294,7 +305,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name="Hopper-v2"):
         observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
         # add various stats to training log:
         log_batch_stats(observes, actions, advantages, disc_sum_rew, logger, episode)
-        policy.update(observes, actions, advantages, logger)  # update policy
+        policy.update(observes, actions, advantages, logger, plotter)  # update policy
         val_func.fit(observes, disc_sum_rew, logger)  # update value function
         logger.write(display=True)  # write logger results to file and stdout
         if killer.kill_now:
@@ -302,6 +313,9 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name="Hopper-v2"):
                 break
             killer.kill_now = False
     logger.close()
+    plotter.plot()
+    # plt.show()
+
     policy.close_sess()
     val_func.close_sess()
 

@@ -179,7 +179,7 @@ class Policy(object):
         self.sess = tf.Session(graph=self.g)
 
         # TensorBoard
-        writer = tf.summary.FileWriter('logs/', self.sess.graph)
+        writer = tf.summary.FileWriter('tensorboard/', self.sess.graph)
 
         self.sess.run(self.init)
 
@@ -189,7 +189,7 @@ class Policy(object):
 
         return self.sess.run(self.sampled_act, feed_dict=feed_dict)
 
-    def update(self, observes, actions, advantages, logger):
+    def update(self, observes, actions, advantages, logger, plotter):
         """ Update policy based on observations, actions and advantages
 
         Args:
@@ -230,6 +230,11 @@ class Policy(object):
                     'KL': kl,
                     'Beta': self.beta,
                     '_lr_multiplier': self.lr_multiplier})
+
+        plotter.updatePolicyEn(entropy)
+        plotter.updateBeta(self.beta)
+        plotter.updatePolicyLoss(loss)
+        plotter.updateKL(kl)
 
     def close_sess(self):
         """ Close TensorFlow session """

@@ -69,6 +69,7 @@ class Logger(object):
         """
         path = os.path.join('log-files', logname, now)
         os.makedirs(path)
+
         filenames = glob.glob('*.py')  # put copy of all python files in log_dir
         for filename in filenames:     # for reference
             shutil.copy(filename, path)
