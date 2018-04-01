@@ -7,8 +7,8 @@
 
 - TODO:
   - [x] Combine with Experience Replay!!
-  - [x] Combine with basic IPG
-  - [ ] Clean up current neural networks settings and check if it's under correct formula from the paper
+  - [x] Combine with basic IPG  
+  - [ ] Clean up current neural networks settings and check if it's under correct formula from the paper  
   - [ ] Find out why during the first 1000 episodes the success rate are always low and with a low improvement. and try to address the problem
   - [ ] More experiments on pushing, sliding, pick&place
   - [ ] catch up with eligibility trace
