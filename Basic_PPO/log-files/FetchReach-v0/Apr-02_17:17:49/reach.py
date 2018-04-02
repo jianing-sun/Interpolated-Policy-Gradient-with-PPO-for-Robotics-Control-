@@ -235,10 +235,10 @@ def build_train_set(trajectories):
     advantages = np.concatenate([t['advantages'] for t in trajectories])
     # normalize advantages
     advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-6)
-    print("observes", observes.shape)   # (1000, 17)
-    print("actions", actions.shape)     # (1000, 4)
-    print("advantages", advantages.shape)   # (1000,)
-    print("disc_sum_rew", disc_sum_rew.shape)   # (1000,)
+    print("observes", observes.shape)
+    print("actions", actions.shape)
+    print("advantages", advantages.shape)
+    print("disc_sum_rew", disc_sum_rew.shape)
     return observes, actions, advantages, disc_sum_rew
 
 

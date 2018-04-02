@@ -229,16 +229,24 @@ def add_gae(trajectories, gamma, lam):
 
 
 def build_train_set(trajectories):
+    """
+
+    Args:
+        trajectories: trajectories after processing by add_disc_sum_rew(),
+            add_value(), and add_gae()
+
+    Returns: 4-tuple of NumPy arrays
+        observes: shape = (N, obs_dim)
+        actions: shape = (N, act_dim)
+        advantages: shape = (N,)
+        disc_sum_rew: shape = (N,)
+    """
     observes = np.concatenate([t['observes'] for t in trajectories])
     actions = np.concatenate([t['actions'] for t in trajectories])
     disc_sum_rew = np.concatenate([t['disc_sum_rew'] for t in trajectories])
     advantages = np.concatenate([t['advantages'] for t in trajectories])
     # normalize advantages
     advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-6)
-    print("observes", observes.shape)   # (1000, 17)
-    print("actions", actions.shape)     # (1000, 4)
-    print("advantages", advantages.shape)   # (1000,)
-    print("disc_sum_rew", disc_sum_rew.shape)   # (1000,)
     return observes, actions, advantages, disc_sum_rew
 
 
@@ -288,7 +296,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name, monitor=False)
         env = gym.wrappers.Monitor(env, aigym_path, force=True)  # recording directory is /tmp
 
     scaler = Scaler(obs_dim)                    # obs_dim=377
-    val_func = NNValueFunction(obs_dim)         # critic
+    val_func = NNValueFunction(obs_dim)
     policy = Policy(obs_dim, act_dim, kl_targ)  # kl target=0.003 by default
     # run a few episodes of untrained policy to initialize scaler:
     run_policy(env, policy, scaler, logger, plotter, episodes=5, plot=False)
