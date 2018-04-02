@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 PPO: Proximal Policy Optimization
 
@@ -33,10 +34,10 @@ import gym
 import numpy as np
 import scipy.signal
 
-from plot_ import Plot
-from IPG.policy_ipg import PolicyIPG
-from utils import Logger, Scaler
-from value_function import NNValueFunction
+from Basic_PPO.plot_ import Plot
+from Basic_PPO.policy_ppo import Policy
+from Basic_PPO.utils import Logger, Scaler
+from Basic_PPO.value_function import NNValueFunction
 import matplotlib.pyplot as plt
 
 class GracefulKiller:
@@ -153,6 +154,8 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
         plotter.updateMeanR(np.mean([t['rewards'].sum() for t in trajectories]))
         plotter.updateSuccessR(np.mean(success_rates))
 
+    print(len(trajectories[0]['observes']))
+    print('trajectories.observations', trajectories[0]['observes'])
     return trajectories
 
 
@@ -243,11 +246,10 @@ def build_train_set(trajectories):
     advantages = np.concatenate([t['advantages'] for t in trajectories])
     # normalize advantages
     advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-6)
-    print(observes, actions, advantages, disc_sum_rew)
     return observes, actions, advantages, disc_sum_rew
 
 
-def log_batch_stats(observes, actions, advantages, disc_sum_rew, logger, episode):
+def log_batch_stats(observes, actions, advantages, logger, disc_sum_rew, episode):
     """ Log various batch statistics """
     logger.log({'_mean_obs': np.mean(observes),
                 '_min_obs': np.min(observes),
@@ -269,7 +271,7 @@ def log_batch_stats(observes, actions, advantages, disc_sum_rew, logger, episode
                 })
 
 
-def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name="Hopper-v2"):
+def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name, monitor=False):
     """ Main training loop
     Args:
         env_name: OpenAI Gym environment name, e.g. 'Hopper-v1'
@@ -282,14 +284,21 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name="Hopper-v2"):
     killer = GracefulKiller()
     env, obs_dim, act_dim = init_gym(env_name)
     obs_dim += 1  # add 1 to obs dimension for time step feature (see run_episode())
-    now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime("%b-%d_%H:%M:%S")  # create dictionaries based on ets time
+
+    now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime(
+        "%b-%d_%H:%M:%S")  # create dictionaries based on ETS time
     logger = Logger(logname=env_name, now=now)
     plotter = Plot(plotname=env_name+"-Fig", now=now)
-    scaler = Scaler(obs_dim)        #
+
+    if monitor:
+        aigym_path = os.path.join('/tmp', env_name, now)
+        env = gym.wrappers.Monitor(env, aigym_path, force=True)  # recording directory is /tmp
+
+    scaler = Scaler(obs_dim)                    # obs_dim=377
     val_func = NNValueFunction(obs_dim)
-    policy = PolicyIPG(obs_dim, act_dim, kl_targ, val_func)  # kl target=0.003 by default
+    policy = Policy(obs_dim, act_dim, kl_targ)  # kl target=0.003 by default
     # run a few episodes of untrained policy to initialize scaler:
-    # run_policy(env, policy, scaler, logger, plotter, episodes=5, plot=False)
+    run_policy(env, policy, scaler, logger, plotter, episodes=5, plot=False)
     episode = 0
     while episode < num_episodes:
         trajectories = run_policy(env, policy, scaler, logger, plotter, episodes=batch_size)
@@ -301,8 +310,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name="Hopper-v2"):
         # concatenate all episodes into single NumPy arrays
         observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
         # add various stats to training log:
-        log_batch_stats(observes, actions, advantages, disc_sum_rew, logger, episode)
-        policy.update(observes, actions, advantages)  # update policy
+        log_batch_stats(observes, actions, advantages, logger, disc_sum_rew, episode)
+        policy.update(observes, actions, advantages, logger, plotter)  # update policy
         val_func.fit(observes, disc_sum_rew, logger, plotter)  # update value function
         logger.write(display=True)  # write logger results to file and stdout
         if killer.kill_now:
@@ -333,4 +342,5 @@ if __name__ == "__main__":
                         default=20)
 
     args = parser.parse_args()
+
     main(**vars(args))
