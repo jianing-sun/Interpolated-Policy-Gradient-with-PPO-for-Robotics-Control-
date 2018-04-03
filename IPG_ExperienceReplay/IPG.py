@@ -453,7 +453,6 @@ def build_train_set(trajectories):
     for i in range(0, learning_sginals.shape[0]):
         for j in range(0, learning_sginals.shape[1]):
             learning_sginals[i][j] = trajectories[i]['advantages'][j]
-    print(learning_sginals)
     return observes, actions, advantages, learning_sginals
 
 
