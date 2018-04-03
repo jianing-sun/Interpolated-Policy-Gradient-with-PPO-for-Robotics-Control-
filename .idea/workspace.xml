@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8661ae50-18cc-4459-b7ea-12376814bd03" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/policy_ppo.py" afterPath="$PROJECT_DIR$/Basic_PPO/policy_ppo.py" />
-      <change beforePath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" afterPath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
-    </list>
+    <list default="true" id="8661ae50-18cc-4459-b7ea-12376814bd03" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -101,8 +98,8 @@
       <file leaf-file-name="IPG.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="55">
-              <caret line="566" column="43" lean-forward="false" selection-start-line="566" selection-start-column="43" selection-end-line="566" selection-end-column="43" />
+            <state relative-caret-position="487">
+              <caret line="569" column="30" lean-forward="true" selection-start-line="569" selection-start-column="30" selection-end-line="569" selection-end-column="30" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -957,8 +954,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="55">
-          <caret line="566" column="43" lean-forward="false" selection-start-line="566" selection-start-column="43" selection-end-line="566" selection-end-column="43" />
+        <state relative-caret-position="487">
+          <caret line="569" column="30" lean-forward="true" selection-start-line="569" selection-start-column="30" selection-end-line="569" selection-end-column="30" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
