@@ -1,15 +1,16 @@
+import argparse
+import random
+
 import gym
 import numpy as np
-import os
-import random
-import tensorflow as tf
-import argparse
-from sklearn.utils import shuffle
 import scipy.signal
+import tensorflow as tf
+from sklearn.utils import shuffle
 
 
 class CriticNN(object):
     """ NN-based state-value function """
+
     # TODO: so this is not a state-action function but is a state-value function nn??
     def __init__(self, obs_dim):
         """
@@ -64,7 +65,7 @@ class CriticNN(object):
         num_batches = max(x.shape[0] // 256, 1)
         batch_size = x.shape[0] // num_batches
         y_hat = self.predict(x)  # check explained variance prior to update
-        old_exp_var = 1 - np.var(y - y_hat)/np.var(y)
+        old_exp_var = 1 - np.var(y - y_hat) / np.var(y)
         if self.replay_buffer_x is None:
             x_train, y_train = x, y
         else:
@@ -81,7 +82,7 @@ class CriticNN(object):
                              self.val_ph: y_train[start:end]}
                 _, l = self.sess.run([self.train_op, self.loss], feed_dict=feed_dict)
         y_hat = self.predict(x)
-        loss = np.mean(np.square(y_hat - y))         # explained variance after update
+        loss = np.mean(np.square(y_hat - y))  # explained variance after update
         exp_var = 1 - np.var(y - y_hat) / np.var(y)  # diagnose over-fitting of val func
 
     def predict(self, x):
@@ -142,11 +143,12 @@ class Scaler(object):
 
     def get(self):
         """ returns 2-tuple: (scale, offset) """
-        return 1/(np.sqrt(self.vars) + 0.1)/3, self.means
+        return 1 / (np.sqrt(self.vars) + 0.1) / 3, self.means
 
 
 class OnPolicyPPO(object):
     """ NN-based policy approximation """
+
     def __init__(self, obs_dim, act_dim, kl_targ):
         self.beta = 1.0  # dynamically adjusted D_KL loss multiplier
         self.eta = 50  # multiplier for D_KL-kl_targ hinge-squared loss
@@ -160,7 +162,7 @@ class OnPolicyPPO(object):
         self._init_session()
 
     def _build_graph(self):
-        self.g = tf.Graph()     # create a new empty graph
+        self.g = tf.Graph()  # create a new empty graph
         with self.g.as_default():
             self._placeholders()
             self._policy_nn()
@@ -209,12 +211,12 @@ class OnPolicyPPO(object):
 
         # logvar_speed is used to 'fool' gradient descent into making faster updates
         # to log-variances. heuristic sets logvar_speed based on network size.
-        logvar_speed = (10 * hid3_size) // 48   # integer division  = 35
+        logvar_speed = (10 * hid3_size) // 48  # integer division  = 35
         # print('logvar_speed',logvar_speed)  # 35
         log_vars = tf.get_variable('logvars', (logvar_speed, self.act_dim), tf.float32,
                                    tf.constant_initializer(0.0))  # 0
 
-        self.log_vars = tf.reduce_sum(log_vars, axis=0) - 1.0   # [-1, -1, -1......, -1]   17 dimension in total
+        self.log_vars = tf.reduce_sum(log_vars, axis=0) - 1.0  # [-1, -1, -1......, -1]   17 dimension in total
 
         print('Policy Params -- h1: {}, h2: {}, h3: {}, lr: {:.3g}, logvar_speed: {}'
               .format(hid1_size, hid2_size, hid3_size, self.lr, logvar_speed))
@@ -261,7 +263,7 @@ class OnPolicyPPO(object):
         """ Sample from distribution, given observation """
         self.sampled_act = (self.means +
                             tf.exp(self.log_vars / 2.0) *
-                            tf.random_normal(shape=(self.act_dim,)))   # add_5:0
+                            tf.random_normal(shape=(self.act_dim,)))  # add_5:0
 
     def _loss_train_op(self):
         """
@@ -273,11 +275,11 @@ class OnPolicyPPO(object):
         See: https://arxiv.org/pdf/1707.02286.pdf
         """
         with tf.name_scope('loss'):
-
             loss1 = -tf.reduce_mean(self.advantages_ph *
                                     tf.exp(self.logp - self.logp_old), name="PG")
             loss2 = tf.reduce_mean(self.beta_ph * self.kl, name="KL")
-            loss3 = self.eta_ph * tf.square(tf.maximum(0.0, self.kl - 2.0 * self.kl_targ), name="HingeLoss")  # quadratically smooth
+            loss3 = self.eta_ph * tf.square(tf.maximum(0.0, self.kl - 2.0 * self.kl_targ),
+                                            name="HingeLoss")  # quadratically smooth
             self.loss = tf.reduce_sum(loss1 + loss2 + loss3, name="TotalLoss")
 
         optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
@@ -305,6 +307,9 @@ class OnPolicyPPO(object):
                                                       feed_dict)
         feed_dict[self.old_log_vars_ph] = old_log_vars_np
         feed_dict[self.old_means_ph] = old_means_np
+
+        loss = self.sess.run(self.loss, feed_dict)
+
         loss, kl, entropy = 0, 0, 0
         for e in range(self.epochs):
             # TODO: need to improve data pipeline - re-feeding data every epoch
@@ -388,7 +393,7 @@ def run_episode(env, policy, scaler, animate=False):
         obs = obs.astype(np.float64).reshape((1, -1))
         obs = np.append(obs, [[step]], axis=1)  # add time step feature
         unscaled_obs.append(obs)
-        obs = (obs - offset) * scale  # center and scale observations
+        obs = obs * scale  # center and scale observations
         observes.append(obs)
         action = policy.sample(obs).reshape((1, -1)).astype(np.float64)
         actions.append(action)
@@ -417,7 +422,7 @@ def compute_q_value(off_trajectories, val_func, gamma):
 
 
 def compute_v_value(trajectories, val_func):
-    for on_trajectory in trajectories:      # 15 trajectories, each with 50 time steps
+    for on_trajectory in trajectories:  # 15 trajectories, each with 50 time steps
         observes = on_trajectory['observes']
         values = val_func.predict(observes)
         on_trajectory['values'] = values
@@ -453,19 +458,18 @@ def build_train_set(trajectories):
     for i in range(0, learning_sginals.shape[0]):
         for j in range(0, learning_sginals.shape[1]):
             learning_sginals[i][j] = trajectories[i]['advantages'][j]
-    return observes, actions, advantages, learning_sginals
+    return observes, actions, advantages, learning_sginals, sum_dis_return
 
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
-
     # initialize gym environment and get observations and actions
     env = gym.make(env_name)
     env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal', 'achieved_goal'])
     obs_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
-    time_steps = 50     # T, time steps in every episode
+    time_steps = 50  # T, time steps in every episode
     userCV = False
-    interpolate_ratio = 0.2      # set v
+    interpolate_ratio = 0.2  # set v
     samples_size = 40
 
     # add 1 to obs dimension for time step feature (see run_episode())
@@ -509,7 +513,11 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
         """compute Monte Carlo advantage estimate advantage (on-policy)"""
         compute_advantages(trajectories, gamma, lam)
-        observes, actions, advantages, learning_signals = build_train_set(trajectories)
+        # here as we don't use control variate, learning_signals equal advantages but with a different shape
+        # to facilitate next step of the algorithm
+        # so in the on-policy advantages I just input with the advantages which is wrong in the strict sense
+        # TODO: change the advantages as a form of learning signals
+        observes, on_actions, advantages, learning_signals, sum_dis_return = build_train_set(trajectories)
 
         """different situations based on if we use control variate: if useCV=True, then compute
         critic-based advantage estimate using current buffer, Q and policy
@@ -536,14 +544,28 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         """compute loss function"""
         states, actions, rewards = [np.squeeze(elem, axis=1) for elem in np.split(samples, 3, 1)]
         states = np.array([s for s in states])
+
+        # compute PPO loss (first term in the IPO algorithm loss function)
         with on_policy.sess as sess:
-            on_policy_loss = sess.run(on_policy.loss, feed_dict={on_policy.obs_ph: states,
-                                                                 on_policy.act_ph: actions,
-                                                                 on_policy.advantages_ph: advantages})
+            on_feed_dict = {on_policy.obs_ph: observes,
+                            on_policy.act_ph: on_actions,
+                            on_policy.advantages_ph: advantages,
+                            on_policy.beta_ph: on_policy.beta,
+                            on_policy.eta_ph: on_policy.eta,
+                            on_policy.lr_ph: on_policy.lr * on_policy.lr_multiplier}
+            old_means_np, old_log_vars_np = sess.run([on_policy.means, on_policy.log_vars], feed_dict=on_feed_dict)
+            on_feed_dict[on_policy.old_log_vars_ph] = old_log_vars_np
+            on_feed_dict[on_policy.old_means_ph] = old_means_np
+            # compute loss
+            on_policy_loss = sess.run(on_policy.loss, feed_dict=on_feed_dict)
+            print(on_policy_loss)
+        # times 1/ET
+        on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
+
+        # compute off-policy loss (second term in the IPO algorithm loss function)
         with critic.sess as sess:
             off_policy_loss = sess.run(critic.loss, feed_dict={critic.obs_ph: states})
 
-        # calculate interpolated policy gradient loss function
         loss = on_policy_loss + off_policy_loss
         on_policy.update(loss)
 
@@ -558,7 +580,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
                          on_policy.eta_ph: on_policy.eta,
                          on_policy.lr_ph: on_policy.lr * on_policy.lr_multiplier}
             old_means_np, old_log_vars_np = sess.run([on_policy.means,
-                                                      on_policy.log_vars],feed_dict)
+                                                      on_policy.log_vars], feed_dict)
             feed_dict[on_policy.old_log_vars_ph] = old_log_vars_np
             feed_dict[on_policy.old_means_ph] = old_means_np
             sess.run((on_policy.train_op, feed_dict))
@@ -575,8 +597,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
                     on_policy.lr_multiplier *= 1.5
 
         """update off-policy"""
-        observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
-        critic.fit(observes, disc_sum_rew)  # update value function
+        # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
+        critic.fit(observes, sum_dis_return)  # update value function
 
     """close sessions"""
     on_policy.close_sess()
@@ -584,7 +606,6 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description=('Train policy on OpenAI Gym environment '
                                                   'using Proximal Policy Optimizer'))
     parser.add_argument('env_name', type=str, help='OpenAI Gym environment name', default="Hopper-v2")

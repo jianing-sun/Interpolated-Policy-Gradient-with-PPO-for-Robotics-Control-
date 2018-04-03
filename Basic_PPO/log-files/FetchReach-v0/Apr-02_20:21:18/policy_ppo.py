@@ -197,17 +197,16 @@ class Policy(object):
             advantages: advantages, shape = (N,)
             logger: Logger object, see utils.py
         """
-        with self.sess as sess:
-            feed_dict = {self.obs_ph: observes,
-                         self.act_ph: actions,
-                         self.advantages_ph: advantages,
-                         self.beta_ph: self.beta,
-                         self.eta_ph: self.eta,
-                         self.lr_ph: self.lr * self.lr_multiplier}
-            old_means_np, old_log_vars_np = sess.run([self.means, self.log_vars],
-                                                          feed_dict)
-            feed_dict[self.old_log_vars_ph] = old_log_vars_np
-            feed_dict[self.old_means_ph] = old_means_np
+        feed_dict = {self.obs_ph: observes,
+                     self.act_ph: actions,
+                     self.advantages_ph: advantages,
+                     self.beta_ph: self.beta,
+                     self.eta_ph: self.eta,
+                     self.lr_ph: self.lr * self.lr_multiplier}
+        old_means_np, old_log_vars_np = self.sess.run([self.means, self.log_vars],
+                                                      feed_dict)
+        feed_dict[self.old_log_vars_ph] = old_log_vars_np
+        feed_dict[self.old_means_ph] = old_means_np
         loss, kl, entropy = 0, 0, 0
         for e in range(self.epochs):
             # TODO: need to improve data pipeline - re-feeding data every epoch
