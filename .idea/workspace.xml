@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8661ae50-18cc-4459-b7ea-12376814bd03" name="Default" comment="" />
+    <list default="true" id="8661ae50-18cc-4459-b7ea-12376814bd03" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" afterPath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +20,8 @@
             <file leaf-file-name="HER.py" pinned="false" current-in-tab="true">
               <entry file="file://$USER_HOME$/Downloads/hindsight-experience-replay/HER.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="305">
-                    <caret line="235" column="8" lean-forward="false" selection-start-line="235" selection-start-column="4" selection-end-line="235" selection-end-column="8" />
+                  <state relative-caret-position="373">
+                    <caret line="239" column="23" lean-forward="false" selection-start-line="239" selection-start-column="23" selection-end-line="239" selection-end-column="23" />
                     <folding>
                       <element signature="e#47#56#0" expanded="true" />
                     </folding>
@@ -76,8 +79,8 @@
       <file leaf-file-name="reach.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/reach.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="307" column="20" lean-forward="false" selection-start-line="307" selection-start-column="17" selection-end-line="307" selection-end-column="20" />
+            <state relative-caret-position="414">
+              <caret line="199" column="30" lean-forward="true" selection-start-line="199" selection-start-column="30" selection-end-line="199" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -86,7 +89,7 @@
       <file leaf-file-name="policy_ppo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
+            <state relative-caret-position="153">
               <caret line="208" column="0" lean-forward="false" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
               <folding>
                 <element signature="e#109#127#0" expanded="true" />
@@ -98,31 +101,23 @@
       <file leaf-file-name="IPG.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="487">
-              <caret line="569" column="30" lean-forward="true" selection-start-line="569" selection-start-column="30" selection-end-line="569" selection-end-column="30" />
+            <state relative-caret-position="550">
+              <caret line="154" column="43" lean-forward="true" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
+                <element signature="e#4395#4453#0" expanded="false" />
+                <element signature="e#4482#6190#0" expanded="false" />
+                <element signature="e#15173#15231#0" expanded="false" />
+                <element signature="e#15281#15844#0" expanded="false" />
+                <element signature="e#16028#16833#0" expanded="false" />
+                <element signature="e#16893#18068#0" expanded="false" />
+                <element signature="e#18179#18516#0" expanded="false" />
+                <element signature="e#18674#18795#0" expanded="false" />
+                <element signature="e#19060#19452#0" expanded="false" />
+                <element signature="e#19582#19843#0" expanded="false" />
+                <element signature="e#19885#20607#0" expanded="false" />
+                <marker date="1522718437843" expanded="true" signature="13070:13164" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="time_limit.py" pinned="false" current-in-tab="false">
-        <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/gym/wrappers/time_limit.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="core.py" pinned="false" current-in-tab="false">
-        <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/gym/core.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="317" column="0" lean-forward="false" selection-start-line="317" selection-start-column="0" selection-end-line="317" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -140,8 +135,8 @@
       <file leaf-file-name="value_function.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/value_function.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-390">
-              <caret line="45" column="37" lean-forward="false" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="37" />
+            <state relative-caret-position="1377">
+              <caret line="81" column="36" lean-forward="true" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
               <folding>
                 <element signature="e#78#101#0" expanded="true" />
               </folding>
@@ -160,10 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>lr_ph</find>
-      <find>logger</find>
-      <find>obs_ph</find>
-      <find>_size</find>
       <find>debug</find>
       <find>HER</find>
       <find>fully_connected_layer</find>
@@ -187,9 +178,13 @@
       <find>update</find>
       <find>computeLoss</find>
       <find>OnPoli</find>
-      <find>advantages_ph</find>
       <find>out</find>
       <find>fit</find>
+      <find>advantages_ph</find>
+      <find>val_ph</find>
+      <find>disc_sum_rew</find>
+      <find>self.val</find>
+      <find>gae</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -225,16 +220,16 @@
         <option value="$PROJECT_DIR$/IPG/policy_ipg.py" />
         <option value="$PROJECT_DIR$/IPG_ExperienceReplay.py" />
         <option value="$USER_HOME$/Downloads/hindsight-experience-replay/HER.py" />
-        <option value="$PROJECT_DIR$/Basic_PPO/reach.py" />
         <option value="$PROJECT_DIR$/Basic_PPO/policy_ppo.py" />
+        <option value="$PROJECT_DIR$/Basic_PPO/reach.py" />
         <option value="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="735" />
+    <option name="x" value="316" />
     <option name="y" value="24" />
-    <option name="width" value="945" />
+    <option name="width" value="1364" />
     <option name="height" value="947" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -426,7 +421,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="735" y="24" width="945" height="947" extended-state="0" />
+    <frame x="316" y="24" width="1364" height="947" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27272728" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -437,7 +432,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18488371" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10052122" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943925" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37793428" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -490,6 +485,11 @@
           <line>206</line>
           <option name="timeStamp" value="119" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py</url>
+          <line>462</line>
+          <option name="timeStamp" value="123" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
@@ -501,7 +501,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="123" />
+      <option name="time" value="124" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -864,14 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/gym/wrappers/time_limit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/gym/core.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -906,16 +898,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/hindsight-experience-replay/HER.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="235" column="8" lean-forward="false" selection-start-line="235" selection-start-column="4" selection-end-line="235" selection-end-column="8" />
-          <folding>
-            <element signature="e#47#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
@@ -924,9 +906,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Downloads/hindsight-experience-replay/HER.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="239" column="23" lean-forward="false" selection-start-line="239" selection-start-column="23" selection-end-line="239" selection-end-column="23" />
+          <folding>
+            <element signature="e#47#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/gym/wrappers/time_limit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="686">
+          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
+        <state relative-caret-position="153">
           <caret line="208" column="0" lean-forward="false" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
           <folding>
             <element signature="e#109#127#0" expanded="true" />
@@ -936,8 +936,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Basic_PPO/value_function.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-390">
-          <caret line="45" column="37" lean-forward="false" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="37" />
+        <state relative-caret-position="1377">
+          <caret line="81" column="36" lean-forward="true" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
           <folding>
             <element signature="e#78#101#0" expanded="true" />
           </folding>
@@ -946,18 +946,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Basic_PPO/reach.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="307" column="20" lean-forward="false" selection-start-line="307" selection-start-column="17" selection-end-line="307" selection-end-column="20" />
+        <state relative-caret-position="414">
+          <caret line="199" column="30" lean-forward="true" selection-start-line="199" selection-start-column="30" selection-end-line="199" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="569" column="30" lean-forward="true" selection-start-line="569" selection-start-column="30" selection-end-line="569" selection-end-column="30" />
+        <state relative-caret-position="550">
+          <caret line="154" column="43" lean-forward="true" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#4395#4453#0" expanded="false" />
+            <element signature="e#4482#6190#0" expanded="false" />
+            <element signature="e#15173#15231#0" expanded="false" />
+            <element signature="e#15281#15844#0" expanded="false" />
+            <element signature="e#16028#16833#0" expanded="false" />
+            <element signature="e#16893#18068#0" expanded="false" />
+            <element signature="e#18179#18516#0" expanded="false" />
+            <element signature="e#18674#18795#0" expanded="false" />
+            <element signature="e#19060#19452#0" expanded="false" />
+            <element signature="e#19582#19843#0" expanded="false" />
+            <element signature="e#19885#20607#0" expanded="false" />
+            <marker date="1522718437843" expanded="true" signature="13070:13164" ph="..." />
           </folding>
         </state>
       </provider>

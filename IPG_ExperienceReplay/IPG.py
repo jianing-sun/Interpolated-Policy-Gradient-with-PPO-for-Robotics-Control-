@@ -308,7 +308,7 @@ class OnPolicyPPO(object):
         feed_dict[self.old_log_vars_ph] = old_log_vars_np
         feed_dict[self.old_means_ph] = old_means_np
 
-        loss = self.sess.run(self.loss, feed_dict)
+        # self.loss = self.sess.run(self.loss, feed_dict)
 
         loss, kl, entropy = 0, 0, 0
         for e in range(self.epochs):
@@ -447,10 +447,20 @@ def compute_advantages(trajectories, gamma, lam):
     # return trajectories['advantages']
 
 
+def add_disc_sum_rew(trajectories, gamma):
+    for trajectory in trajectories:
+        if gamma < 0.999:  # don't scale for gamma ~= 1
+            rewards = trajectory['rewards'] * (1 - gamma)
+        else:
+            rewards = trajectory['rewards']
+        disc_sum_rew = discount(rewards, gamma)
+        trajectory['disc_sum_rew'] = disc_sum_rew
+
+
 def build_train_set(trajectories):
     observes = np.concatenate([t['observes'] for t in trajectories])
     actions = np.concatenate([t['actions'] for t in trajectories])
-    # disc_sum_rew = np.concatenate([t['disc_sum_rew'] for t in trajectories])
+    disc_sum_rew = np.concatenate([t['disc_sum_rew'] for t in trajectories])
     advantages = np.concatenate([t['advantages'] for t in trajectories])
     # normalize advantages
     advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-6)
@@ -458,7 +468,7 @@ def build_train_set(trajectories):
     for i in range(0, learning_sginals.shape[0]):
         for j in range(0, learning_sginals.shape[1]):
             learning_sginals[i][j] = trajectories[i]['advantages'][j]
-    return observes, actions, advantages, learning_sginals, sum_dis_return
+    return observes, actions, advantages, learning_sginals, disc_sum_rew
 
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
@@ -517,6 +527,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         # to facilitate next step of the algorithm
         # so in the on-policy advantages I just input with the advantages which is wrong in the strict sense
         # TODO: change the advantages as a form of learning signals
+        add_disc_sum_rew(trajectories, gamma)  # calculated discounted sum of Rs
         observes, on_actions, advantages, learning_signals, sum_dis_return = build_train_set(trajectories)
 
         """different situations based on if we use control variate: if useCV=True, then compute
@@ -559,7 +570,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             # compute loss
             on_policy_loss = sess.run(on_policy.loss, feed_dict=on_feed_dict)
             print(on_policy_loss)
-        # times 1/ET
+        # times (1/ET)
         on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
 
         # compute off-policy loss (second term in the IPO algorithm loss function)
