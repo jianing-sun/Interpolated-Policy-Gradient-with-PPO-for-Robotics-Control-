@@ -3,6 +3,189 @@
   <component name="ChangeListManager">
     <list default="true" id="8661ae50-18cc-4459-b7ea-12376814bd03" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_15:07:57/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:36:23/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:35/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:39:50/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:42:07/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_17:51:43/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_19:39:15/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:26:50/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:28:27/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:32/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-01_20:46:51/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_13:18:19/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_14:01:46/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:12/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:17:49/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_17:40:51/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:07:18/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:21/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_18:36:49/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:18/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:21:55/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:25:58/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:37:22/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:40:26/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:42:09/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/log.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/plot_.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/policy_ppo.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/reach.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/test.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/utils.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_20:44:40/value_function.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/Basic_PPO/reach.py" afterPath="$PROJECT_DIR$/Basic_PPO/reach.py" />
       <change beforePath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" afterPath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -79,8 +262,8 @@
       <file leaf-file-name="reach.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/reach.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="199" column="30" lean-forward="true" selection-start-line="199" selection-start-column="30" selection-end-line="199" selection-end-column="30" />
+            <state relative-caret-position="341">
+              <caret line="101" column="23" lean-forward="false" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -89,7 +272,7 @@
       <file leaf-file-name="policy_ppo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
+            <state relative-caret-position="77">
               <caret line="208" column="0" lean-forward="false" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
               <folding>
                 <element signature="e#109#127#0" expanded="true" />
@@ -101,22 +284,16 @@
       <file leaf-file-name="IPG.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="154" column="43" lean-forward="true" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
+            <state relative-caret-position="113">
+              <caret line="578" column="27" lean-forward="true" selection-start-line="578" selection-start-column="27" selection-end-line="578" selection-end-column="27" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
                 <element signature="e#4395#4453#0" expanded="false" />
                 <element signature="e#4482#6190#0" expanded="false" />
-                <element signature="e#15173#15231#0" expanded="false" />
                 <element signature="e#15281#15844#0" expanded="false" />
-                <element signature="e#16028#16833#0" expanded="false" />
-                <element signature="e#16893#18068#0" expanded="false" />
-                <element signature="e#18179#18516#0" expanded="false" />
-                <element signature="e#18674#18795#0" expanded="false" />
-                <element signature="e#19060#19452#0" expanded="false" />
-                <element signature="e#19582#19843#0" expanded="false" />
-                <element signature="e#19885#20607#0" expanded="false" />
-                <marker date="1522718437843" expanded="true" signature="13070:13164" ph="..." />
+                <element signature="e#19653#19914#0" expanded="false" />
+                <element signature="e#19956#20678#0" expanded="false" />
+                <marker date="1522722689347" expanded="true" signature="13070:13164" ph="..." />
               </folding>
             </state>
           </provider>
@@ -136,7 +313,7 @@
         <entry file="file://$PROJECT_DIR$/Basic_PPO/value_function.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1377">
-              <caret line="81" column="36" lean-forward="true" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
+              <caret line="81" column="36" lean-forward="false" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
               <folding>
                 <element signature="e#78#101#0" expanded="true" />
               </folding>
@@ -155,9 +332,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>debug</find>
-      <find>HER</find>
-      <find>fully_connected_layer</find>
       <find>loss</find>
       <find>buff</find>
       <find>val</find>
@@ -180,11 +354,14 @@
       <find>OnPoli</find>
       <find>out</find>
       <find>fit</find>
-      <find>advantages_ph</find>
       <find>val_ph</find>
       <find>disc_sum_rew</find>
       <find>self.val</find>
+      <find>predict</find>
+      <find>compute_q_value</find>
+      <find>CriticNN</find>
       <find>gae</find>
+      <find>advantages_ph</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -257,11 +434,6 @@
             <path>
               <item name="RL_Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="RL_Project" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RL_Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RL_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="Basic_PPO" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="RL_Project" type="b2602c69:ProjectViewProjectNode" />
@@ -422,19 +594,18 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="316" y="24" width="1364" height="947" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27272728" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.11615785" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36384976" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40140846" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38849765" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10052122" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943925" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37793428" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32511738" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -486,9 +657,29 @@
           <option name="timeStamp" value="119" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Basic_PPO/reach.py</url>
+          <line>295</line>
+          <option name="timeStamp" value="125" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py</url>
-          <line>462</line>
-          <option name="timeStamp" value="123" />
+          <line>583</line>
+          <option name="timeStamp" value="128" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Basic_PPO/reach.py</url>
+          <line>107</line>
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Basic_PPO/reach.py</url>
+          <line>103</line>
+          <option name="timeStamp" value="135" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Basic_PPO/reach.py</url>
+          <line>89</line>
+          <option name="timeStamp" value="136" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -501,15 +692,15 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="124" />
+      <option name="time" value="139" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="observes" language="Python" />
-        <watch expression="actions" language="Python" />
-        <watch expression="on_policy_loss" language="Python" />
-        <watch expression="old_means_np" language="Python" />
-        <watch expression="observes" language="Python" />
+        <watch expression="states.shape" language="Python" />
+        <watch expression="states" language="Python" />
+        <watch expression="offset" language="Python" />
+        <watch expression="episode_experiences" language="Python" />
+        <watch expression="np.array(trajectories[0]['observes']).shape" language="Python" />
         <watch expression="trajectories" language="Python" />
         <watch expression="trajectories[0]['observes']" language="Python" />
         <watch expression="states[0]" language="Python" />
@@ -519,17 +710,42 @@
   <component name="debuggerHistoryManager">
     <expressions id="watch">
       <expression>
-        <expression-string>on_policy_loss</expression-string>
+        <expression-string>print(states)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>loss</expression-string>
+        <expression-string>states.shape</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>actions</expression-string>
+        <expression-string>states</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>offset</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>obs</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>episode_experiences</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>buff.buffer</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>buff.buffer[0][0][0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -539,32 +755,7 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>sess</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>on_policy.log_vars</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>on_policy.means</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>old_means_np</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>old_log_vars_np</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.log_vars</expression-string>
+        <expression-string>samples</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -924,20 +1115,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="208" column="0" lean-forward="false" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
-          <folding>
-            <element signature="e#109#127#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Basic_PPO/value_function.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1377">
-          <caret line="81" column="36" lean-forward="true" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
+          <caret line="81" column="36" lean-forward="false" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
           <folding>
             <element signature="e#78#101#0" expanded="true" />
           </folding>
@@ -946,30 +1127,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Basic_PPO/reach.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="199" column="30" lean-forward="true" selection-start-line="199" selection-start-column="30" selection-end-line="199" selection-end-column="30" />
+        <state relative-caret-position="341">
+          <caret line="101" column="23" lean-forward="false" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="23" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="77">
+          <caret line="208" column="0" lean-forward="false" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
+          <folding>
+            <element signature="e#109#127#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="154" column="43" lean-forward="true" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
+        <state relative-caret-position="113">
+          <caret line="578" column="27" lean-forward="true" selection-start-line="578" selection-start-column="27" selection-end-line="578" selection-end-column="27" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
             <element signature="e#4395#4453#0" expanded="false" />
             <element signature="e#4482#6190#0" expanded="false" />
-            <element signature="e#15173#15231#0" expanded="false" />
             <element signature="e#15281#15844#0" expanded="false" />
-            <element signature="e#16028#16833#0" expanded="false" />
-            <element signature="e#16893#18068#0" expanded="false" />
-            <element signature="e#18179#18516#0" expanded="false" />
-            <element signature="e#18674#18795#0" expanded="false" />
-            <element signature="e#19060#19452#0" expanded="false" />
-            <element signature="e#19582#19843#0" expanded="false" />
-            <element signature="e#19885#20607#0" expanded="false" />
-            <marker date="1522718437843" expanded="true" signature="13070:13164" ph="..." />
+            <element signature="e#19653#19914#0" expanded="false" />
+            <element signature="e#19956#20678#0" expanded="false" />
+            <marker date="1522722689347" expanded="true" signature="13070:13164" ph="..." />
           </folding>
         </state>
       </provider>

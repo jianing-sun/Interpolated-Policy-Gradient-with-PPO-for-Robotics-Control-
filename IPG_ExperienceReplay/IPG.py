@@ -393,8 +393,9 @@ def run_episode(env, policy, scaler, animate=False):
         obs = obs.astype(np.float64).reshape((1, -1))
         obs = np.append(obs, [[step]], axis=1)  # add time step feature
         unscaled_obs.append(obs)
-        obs = obs * scale  # center and scale observations
-        observes.append(obs)
+        obs = (obs - offset) * scale  # center and scale observations
+        temp_obs = obs
+        observes.append(obs) # center and scale observations
         action = policy.sample(obs).reshape((1, -1)).astype(np.float64)
         actions.append(action)
         obs, reward, done, _ = env.step(action)
@@ -402,13 +403,13 @@ def run_episode(env, policy, scaler, animate=False):
             reward = np.asscalar(reward)
         rewards.append(reward)
         step += 1e-3  # increment time step feature
-        current_buffer.append((obs, action, reward))
+        current_buffer.append((temp_obs, action, reward))
 
     return (np.concatenate(observes), np.concatenate(actions),
             np.array(rewards, dtype=np.float64), np.concatenate(unscaled_obs), current_buffer)
 
 
-def compute_q_value(off_trajectories, val_func, gamma):
+def compute_qvalue(off_trajectories, val_func, gamma):
     for off_trajectory in off_trajectories:
         observes = off_trajectories[0]
         values = val_func.predict(observes)
@@ -418,10 +419,10 @@ def compute_q_value(off_trajectories, val_func, gamma):
         else:
             rewards = off_trajectory[2]
         q_value = rewards + np.append(values[1:] * gamma, 0)
-    return q_value
+    # return q_value
 
 
-def compute_v_value(trajectories, val_func):
+def compute_vvalue(trajectories, val_func):
     for on_trajectory in trajectories:  # 15 trajectories, each with 50 time steps
         observes = on_trajectory['observes']
         values = val_func.predict(observes)
@@ -518,7 +519,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         # q_values = compute_q_value(off_trajectories, off_policy, gamma)
 
         """fit baseline V() through on-policy (use current trajectories)"""
-        compute_v_value(trajectories, critic)
+        compute_vvalue(trajectories, critic)
         # print(trajectories)
 
         """compute Monte Carlo advantage estimate advantage (on-policy)"""
@@ -549,7 +550,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             # using on-policy samples to compute loss and optimize policy
             samples = BatchSample(current_buffer, samples_size)
         else:
-            # using off-policy samples to compute loss and optimize policy
+            # using off-policy samples to compute loss and optimize policy (always go here)
+            # TODO: what's the condition to change?
             samples = buff.sample(samples_size)
 
         """compute loss function"""
@@ -573,6 +575,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         # times (1/ET)
         on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
 
+        states = np.squeeze(states)
+        print(states.shape)
         # compute off-policy loss (second term in the IPO algorithm loss function)
         with critic.sess as sess:
             off_policy_loss = sess.run(critic.loss, feed_dict={critic.obs_ph: states})
