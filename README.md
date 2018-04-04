@@ -18,7 +18,7 @@
 
 
   - [Proximal Policy Gradient](https://arxiv.org/pdf/1707.02286.pdf)
-  - [Trust Region Policy Gradient](trust region policy gradient)
+  - [Trust Region Policy Gradient](https://arxiv.org/pdf/1502.05477.pdf)
   - [Interpolated Policy Gradient](https://arxiv.org/pdf/1706.00387.pdf)
   - [Hindsight Experience Replay](http://papers.nips.cc/paper/7090-hindsight-experience-replay.pdf)
   - [Generalized Advantage Estimator](https://arxiv.org/pdf/1506.02438.pdf)
