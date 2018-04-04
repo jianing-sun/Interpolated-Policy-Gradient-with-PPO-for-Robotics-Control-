@@ -154,7 +154,9 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
     if plot:
         plotter.updateMeanR(np.mean([t['rewards'].sum() for t in trajectories]))
         plotter.updateSuccessR(np.mean(success_rates))
-
+    #
+    # print(len(trajectories[0]['observes']))
+    # print('trajectories.observes', trajectories[0]['observes'])
     return trajectories
 
 
@@ -236,7 +238,7 @@ def build_train_set(trajectories):
     print("observes", observes.shape)   # (1000, 17)
     print("actions", actions.shape)     # (1000, 4)
     print("advantages", advantages.shape)   # (1000,)
-    print("disc_sum_rew", disc_sum_rew.shape)   # (1000,)
+    print("disc_sum_rew", disc_sum_rew.shape)   # (1000,17)
     return observes, actions, advantages, disc_sum_rew
 
 

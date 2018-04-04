@@ -12,19 +12,20 @@ class CriticNN(object):
     """ NN-based state-value function """
 
     # TODO: so this is not a state-action function but is a state-value function nn??
-    def __init__(self, obs_dim):
+    def __init__(self, obs_dim, name):
         """
         Args:
             obs_dim: number of dimensions in observation vector (int)
         """
-        self.replay_buffer_x = None
-        self.replay_buffer_y = None
-        self.obs_dim = obs_dim
-        self.epochs = 10
-        self.lr = None  # learning rate set in _build_graph()
-        self._build_graph()
-        self.sess = tf.Session(graph=self.g)
-        self.sess.run(self.init)
+        with tf.variable_scope(name):
+            self.replay_buffer_x = None
+            self.replay_buffer_y = None
+            self.obs_dim = obs_dim
+            self.epochs = 10
+            self.lr = None  # learning rate set in _build_graph()
+            self._build_graph()
+            self.sess = tf.Session(graph=self.g)
+            self.sess.run(self.init)
 
     def _build_graph(self):
         """ Construct TensorFlow graph, including loss function, init op and train op """
@@ -64,7 +65,7 @@ class CriticNN(object):
     def fit(self, x, y):
         num_batches = max(x.shape[0] // 256, 1)
         batch_size = x.shape[0] // num_batches
-        y_hat = self.predict(x)  # check explained variance prior to update
+        y_hat = self.predict(x)                  # check explained variance prior to update
         old_exp_var = 1 - np.var(y - y_hat) / np.var(y)
         if self.replay_buffer_x is None:
             x_train, y_train = x, y
@@ -84,6 +85,7 @@ class CriticNN(object):
         y_hat = self.predict(x)
         loss = np.mean(np.square(y_hat - y))  # explained variance after update
         exp_var = 1 - np.var(y - y_hat) / np.var(y)  # diagnose over-fitting of val func
+        return loss
 
     def predict(self, x):
         """ Predict method """
@@ -282,9 +284,6 @@ class OnPolicyPPO(object):
                                             name="HingeLoss")  # quadratically smooth
             self.loss = tf.reduce_sum(loss1 + loss2 + loss3, name="TotalLoss")
 
-        optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
-        self.train_op = optimizer.minimize(self.loss)
-
     def _init_session(self):
         """Launch TensorFlow session and initialize variables"""
         self.sess = tf.Session(graph=self.g)
@@ -296,25 +295,22 @@ class OnPolicyPPO(object):
 
         return self.sess.run(self.sampled_act, feed_dict=feed_dict)
 
-    def update(self, observes, actions, advantages):
+    def update(self, loss, observes, actions, advantages):
         feed_dict = {self.obs_ph: observes,
                      self.act_ph: actions,
                      self.advantages_ph: advantages,
                      self.beta_ph: self.beta,
                      self.eta_ph: self.eta,
                      self.lr_ph: self.lr * self.lr_multiplier}
-        old_means_np, old_log_vars_np = self.sess.run([self.means, self.log_vars],
-                                                      feed_dict)
-        feed_dict[self.old_log_vars_ph] = old_log_vars_np
-        feed_dict[self.old_means_ph] = old_means_np
 
-        # self.loss = self.sess.run(self.loss, feed_dict)
+        optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
+        self.train_op = optimizer.minimize(loss)
 
-        loss, kl, entropy = 0, 0, 0
+        kl, entropy = 0, 0
         for e in range(self.epochs):
             # TODO: need to improve data pipeline - re-feeding data every epoch
             self.sess.run(self.train_op, feed_dict)
-            loss, kl, entropy = self.sess.run([self.loss, self.kl, self.entropy], feed_dict)
+            kl, entropy = self.sess.run([self.loss, self.kl, self.entropy], feed_dict)
             if kl > self.kl_targ * 4:  # early stopping if D_KL diverges badly
                 break
         # TODO: too many "magic numbers" in next 8 lines of code, need to clean up
@@ -409,16 +405,16 @@ def run_episode(env, policy, scaler, animate=False):
             np.array(rewards, dtype=np.float64), np.concatenate(unscaled_obs), current_buffer)
 
 
-def compute_qvalue(off_trajectories, val_func, gamma):
-    for off_trajectory in off_trajectories:
-        observes = off_trajectories[0]
-        values = val_func.predict(observes)
-        off_trajectory.append(values)
-        if gamma < 0.999:  # don't scale for gamma ~= 1
-            rewards = off_trajectory[2] * (1 - gamma)
-        else:
-            rewards = off_trajectory[2]
-        q_value = rewards + np.append(values[1:] * gamma, 0)
+# def compute_qvalue(off_trajectories, val_func, gamma):
+#     for off_trajectory in off_trajectories:
+#         observes = off_trajectories[0]
+#         values = val_func.predict(observes)
+#         off_trajectory.append(values)
+#         if gamma < 0.999:  # don't scale for gamma ~= 1
+#             rewards = off_trajectory[2] * (1 - gamma)
+#         else:
+#             rewards = off_trajectory[2]
+#         q_value = rewards + np.append(values[1:] * gamma, 0)
     # return q_value
 
 
@@ -427,6 +423,17 @@ def compute_vvalue(trajectories, val_func):
         observes = on_trajectory['observes']
         values = val_func.predict(observes)
         on_trajectory['values'] = values
+
+
+def critic_compute_vvalue(dict_states, val_func):
+    """
+    compute V(st) for next step td error calculation
+    :param dict_states:
+    :param val_func:
+    :return:
+    """
+    values = val_func.predict(dict_states['states'])
+    dict_states['values'] = values
 
 
 def discount(x, gamma):
@@ -486,7 +493,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     # add 1 to obs dimension for time step feature (see run_episode())
     obs_dim += 1
     scaler = Scaler(obs_dim)
-    critic = CriticNN(obs_dim)
+    baseline = CriticNN(obs_dim, name='baseline')
+    critic = CriticNN(obs_dim, name='critic')
     on_policy = OnPolicyPPO(obs_dim, act_dim, kl_targ)
 
     # initialize replay buffer
@@ -519,7 +527,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         # q_values = compute_q_value(off_trajectories, off_policy, gamma)
 
         """fit baseline V() through on-policy (use current trajectories)"""
-        compute_vvalue(trajectories, critic)
+        compute_vvalue(trajectories, baseline)
         # print(trajectories)
 
         """compute Monte Carlo advantage estimate advantage (on-policy)"""
@@ -527,7 +535,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         # here as we don't use control variate, learning_signals equal advantages but with a different shape
         # to facilitate next step of the algorithm
         # so in the on-policy advantages I just input with the advantages which is wrong in the strict sense
-        # TODO: change the advantages as a form of learning signals
+        # TODO: change the advantages as the form of learning signal
         add_disc_sum_rew(trajectories, gamma)  # calculated discounted sum of Rs
         observes, on_actions, advantages, learning_signals, sum_dis_return = build_train_set(trajectories)
 
@@ -557,6 +565,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         """compute loss function"""
         states, actions, rewards = [np.squeeze(elem, axis=1) for elem in np.split(samples, 3, 1)]
         states = np.array([s for s in states])
+        states = np.squeeze(states)
 
         # compute PPO loss (first term in the IPO algorithm loss function)
         with on_policy.sess as sess:
@@ -572,52 +581,56 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             # compute loss
             on_policy_loss = sess.run(on_policy.loss, feed_dict=on_feed_dict)
             print(on_policy_loss)
-        # times (1/ET)
-        on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
+            # times (1/ET)
+            on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
 
-        states = np.squeeze(states)
-        print(states.shape)
-        # compute off-policy loss (second term in the IPO algorithm loss function)
-        with critic.sess as sess:
-            off_policy_loss = sess.run(critic.loss, feed_dict={critic.obs_ph: states})
+            # compute off-policy loss (second term in the IPO algorithm loss function)
+            """
+            consider using Sarsa as the critic, then delta Q = Rt+1 + gamma * Q(St+1, At+1) - Q(St, At)
+            then the loss is the sum over all the batch samples
+            """
 
-        loss = on_policy_loss + off_policy_loss
-        on_policy.update(loss)
+            # target = td_target(env, states, on_policy)  # compute Rt+1 + gamma * Q(St+1, At+1)
+            dict_states = {'states': states}
+            # add values evaluation for current states
+            critic_compute_vvalue(dict_states, critic)
+            # compute (td target - current values) as delta Qw(Sm) under PPO policy
+            b = interpolate_ratio
+            off_policy_loss = TD(env, dict_states, on_policy, critic)
+            off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
+
+            loss = on_policy_loss + off_policy_loss
 
         """update policy using interpolated policy gradient loss function"""
-        with on_policy.sess as sess:
-            optimizer = tf.train.AdamOptimizer(on_policy.lr_ph)  # gradient descent with Adam optimizer
-            on_policy.train_op = optimizer.minimize(loss)
-            feed_dict = {on_policy.obs_ph: states,
-                         on_policy.act_ph: actions,
-                         on_policy.advantages_ph: advantages,
-                         on_policy.beta_ph: on_policy.beta,
-                         on_policy.eta_ph: on_policy.eta,
-                         on_policy.lr_ph: on_policy.lr * on_policy.lr_multiplier}
-            old_means_np, old_log_vars_np = sess.run([on_policy.means,
-                                                      on_policy.log_vars], feed_dict)
-            feed_dict[on_policy.old_log_vars_ph] = old_log_vars_np
-            feed_dict[on_policy.old_means_ph] = old_means_np
-            sess.run((on_policy.train_op, feed_dict))
-            kl, entropy = sess.run([on_policy.kl, on_policy.entropy], feed_dict)
-            if kl > on_policy.kl_targ * 4:  # early stopping if D_KL diverges badly
-                break
-            if kl > on_policy.kl_targ * 2:  # servo beta to reach D_KL target
-                on_policy.beta = np.minimum(35, 1.5 * on_policy.beta)  # max clip beta
-                if on_policy.beta > 30 and on_policy.lr_multiplier > 0.1:
-                    on_policy.lr_multiplier /= 1.5
-            elif kl < on_policy.kl_targ / 2:
-                on_policy.beta = np.maximum(1 / 35, on_policy.beta / 1.5)  # min clip beta
-                if on_policy.beta < (1 / 30) and on_policy.lr_multiplier < 10:
-                    on_policy.lr_multiplier *= 1.5
+        on_policy.update(loss, observes, actions, advantages)
 
-        """update off-policy"""
+        """update baseline and critic"""
         # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
-        critic.fit(observes, sum_dis_return)  # update value function
+        baseline.fit(observes, sum_dis_return)  # update value function
 
     """close sessions"""
     on_policy.close_sess()
-    critic.close_sess()
+    baseline.close_sess()
+
+
+def TD(env, dict_states, policy, critic, gamma=0.995):
+    states = dict_states['states']
+    states_ = []
+    rewards_ = []
+    for state in states:
+        action = policy.sample(np.array(state).reshape(1, 17)).reshape((1, -1)).astype(np.float64)
+        state_, reward, done, _ = env.step(action)
+        state_ = np.append(state_, [state[-1]+0.001])
+        # dict_temp = {'state_': state_,
+        #              'r_': reward}
+        # dict_states.append(dict_temp)
+        states_.append(state_)
+        rewards_.append(reward)
+    values_ = critic.predict(states_)
+    dict_states['values_'] = values_
+    td_errors = rewards_ + gamma * values_ - dict_states['values']
+
+    return td_errors
 
 
 if __name__ == "__main__":
