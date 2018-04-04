@@ -2,35 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8661ae50-18cc-4459-b7ea-12376814bd03" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/Basic_PPO/tensorboard/events.out.tfevents.1522772885.Jianings-MacBook-Pro.local" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Basic_PPO/tensorboard/events.out.tfevents.1522772915.Jianings-MacBook-Pro.local" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Basic_PPO/tensorboard/events.out.tfevents.1522772966.Jianings-MacBook-Pro.local" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Basic_PPO/tensorboard/events.out.tfevents.1522773004.Jianings-MacBook-Pro.local" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/log.csv" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/plot_.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/policy_ppo.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/reach.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/test.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:05:48/value_function.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/log.csv" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/plot_.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/policy_ppo.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/reach.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/test.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:21:54/value_function.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/log.csv" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/plot_.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/policy_ppo.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/reach.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/test.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/log-files/FetchReach-v0/Apr-02_22:23:09/value_function.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/policy_ppo.py" afterPath="$PROJECT_DIR$/Basic_PPO/policy_ppo.py" />
-      <change beforePath="$PROJECT_DIR$/Basic_PPO/reach.py" afterPath="$PROJECT_DIR$/Basic_PPO/reach.py" />
-      <change beforePath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" afterPath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
+      <change beforePath="$PROJECT_DIR$/IPG/experience_replay.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IPG/policy_ipg.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IPG/train.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" afterPath="$PROJECT_DIR$/IPG+PPO/IPG.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -106,8 +82,8 @@
       <file leaf-file-name="policy_ppo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="207" column="22" lean-forward="false" selection-start-line="207" selection-start-column="22" selection-end-line="207" selection-end-column="22" />
+            <state relative-caret-position="378">
+              <caret line="173" column="53" lean-forward="true" selection-start-line="173" selection-start-column="53" selection-end-line="173" selection-end-column="53" />
               <folding>
                 <element signature="e#109#127#0" expanded="true" />
               </folding>
@@ -116,26 +92,16 @@
         </entry>
       </file>
       <file leaf-file-name="IPG.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
+        <entry file="file://$PROJECT_DIR$/IPG+PPO/IPG.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="601" column="0" lean-forward="false" selection-start-line="601" selection-start-column="0" selection-end-line="601" selection-end-column="0" />
+            <state relative-caret-position="141">
+              <caret line="307" column="0" lean-forward="false" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
                 <element signature="e#4507#4565#0" expanded="false" />
                 <element signature="e#4594#6302#0" expanded="false" />
-                <element signature="e#15062#15625#0" expanded="false" />
+                <element signature="e#15105#15668#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="codecs.py" pinned="false" current-in-tab="false">
-        <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/codecs.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-11926">
-              <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -171,16 +137,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Basic_PPO/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="value_function.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Basic_PPO/value_function.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -204,7 +160,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>computeLoss</find>
       <find>OnPoli</find>
       <find>out</find>
       <find>predict</find>
@@ -214,7 +169,6 @@
       <find>val_ph</find>
       <find>replay_buffer_x</find>
       <find>self.val</find>
-      <find>advantages_ph</find>
       <find>sample</find>
       <find>off_trajectories</find>
       <find>baseline</find>
@@ -234,6 +188,8 @@
       <find>poli</find>
       <find>policy.sample</find>
       <find>dict_states</find>
+      <find>advantages_ph</find>
+      <find>self.loss</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -273,6 +229,7 @@
         <option value="$PROJECT_DIR$/Basic_PPO/policy_ppo.py" />
         <option value="$PROJECT_DIR$/Basic_PPO/value_function.py" />
         <option value="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
+        <option value="$PROJECT_DIR$/IPG+PPO/IPG.py" />
       </list>
     </option>
   </component>
@@ -311,12 +268,7 @@
             <path>
               <item name="RL_Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="RL_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="IPG" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RL_Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RL_Project" type="462c0819:PsiDirectoryNode" />
-              <item name="IPG_ExperienceReplay" type="462c0819:PsiDirectoryNode" />
+              <item name="IPG+PPO" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -367,12 +319,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IPG_ExperienceReplay" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/IPG+PPO" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="RL_Project" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/IPG+PPO/IPG.py" />
       <option name="PARAMETERS" value="FetchReach-v0 -n 1000" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -467,18 +419,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="316" y="24" width="1364" height="947" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10722264" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10722264" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36384976" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21596244" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.278169" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12658228" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943925" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30751175" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43661973" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -530,14 +483,24 @@
           <option name="timeStamp" value="140" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py</url>
-          <line>599</line>
-          <option name="timeStamp" value="172" />
+          <url>file://$PROJECT_DIR$/IPG+PPO/IPG.py</url>
+          <line>609</line>
+          <option name="timeStamp" value="178" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py</url>
-          <line>601</line>
-          <option name="timeStamp" value="173" />
+          <url>file://$PROJECT_DIR$/IPG+PPO/IPG.py</url>
+          <line>605</line>
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IPG+PPO/IPG.py</url>
+          <line>306</line>
+          <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/IPG+PPO/IPG.py</url>
+          <line>307</line>
+          <option name="timeStamp" value="181" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -550,11 +513,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="174" />
+      <option name="time" value="182" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="dict_states" language="Python" />
+        <watch expression="observes" language="Python" />
         <watch expression="states" language="Python" />
         <watch expression="state" language="Python" />
         <watch expression="state.shape" language="Python" />
@@ -562,13 +525,28 @@
         <watch expression="off_policy_loss" language="Python" />
         <watch expression="on_policy_loss" language="Python" />
         <watch expression="state" language="Python" />
-        <watch expression="loss" language="Python" />
-        <watch expression="rewards_" language="Python" />
+        <watch expression="sum_dis_return" language="Python" />
+        <watch expression="td_targets" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>td_targets</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>sum_dis_return</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>observes</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>on_policy_loss</expression-string>
         <language-id>Python</language-id>
@@ -604,29 +582,9 @@
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>dict_states['states_']</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>dict_states['states']</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>obs</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/plot-files/FetchReach-v0-Fig/Mar-30_17:29:21/Policy Entropy.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/plot-files/FetchReach-v0-Fig/Mar-30_17:29:21/Policy Loss.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -780,9 +738,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="40">
           <caret line="31" column="45" lean-forward="true" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -790,9 +746,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="319">
           <caret line="315" column="25" lean-forward="true" selection-start-line="315" selection-start-column="25" selection-end-line="315" selection-end-column="25" />
-          <folding>
-            <element signature="e#713#728#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -912,9 +866,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="383">
           <caret line="186" column="60" lean-forward="false" selection-start-line="186" selection-start-column="60" selection-end-line="186" selection-end-column="60" />
-          <folding>
-            <element signature="e#0#10#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -931,16 +883,6 @@
         <state relative-caret-position="686">
           <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="207" column="22" lean-forward="false" selection-start-line="207" selection-start-column="22" selection-end-line="207" selection-end-column="22" />
-          <folding>
-            <element signature="e#109#127#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -977,14 +919,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Basic_PPO/reach.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="296" column="28" lean-forward="false" selection-start-line="296" selection-start-column="28" selection-end-line="296" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Basic_PPO/value_function.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -995,23 +929,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Basic_PPO/reach.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="296" column="28" lean-forward="false" selection-start-line="296" selection-start-column="28" selection-end-line="296" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-11926">
+        <state relative-caret-position="144">
           <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/IPG_ExperienceReplay/IPG.py">
+    <entry file="file://$PROJECT_DIR$/Basic_PPO/policy_ppo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="601" column="0" lean-forward="false" selection-start-line="601" selection-start-column="0" selection-end-line="601" selection-end-column="0" />
+        <state relative-caret-position="378">
+          <caret line="173" column="53" lean-forward="true" selection-start-line="173" selection-start-column="53" selection-end-line="173" selection-end-column="53" />
+          <folding>
+            <element signature="e#109#127#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/IPG+PPO/IPG.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="307" column="0" lean-forward="false" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
             <element signature="e#4507#4565#0" expanded="false" />
             <element signature="e#4594#6302#0" expanded="false" />
-            <element signature="e#15062#15625#0" expanded="false" />
+            <element signature="e#15105#15668#0" expanded="false" />
           </folding>
         </state>
       </provider>

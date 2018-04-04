@@ -301,10 +301,11 @@ class OnPolicyPPO(object):
                      self.advantages_ph: advantages,
                      self.beta_ph: self.beta,
                      self.eta_ph: self.eta,
+                     self.loss: loss,
                      self.lr_ph: self.lr * self.lr_multiplier}
 
         optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
-        self.train_op = optimizer.minimize(loss)
+        self.train_op = optimizer.minimize(self.loss)
 
         kl, entropy = 0, 0
         for e in range(self.epochs):
@@ -596,7 +597,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             critic_compute_vvalue(dict_states, critic)
             # compute (td target - current values) as delta Qw(Sm) under PPO policy
             b = interpolate_ratio
-            off_policy_loss = TD(env, dict_states, on_policy, critic)
+            off_policy_loss, td_targets = TD(env, dict_states, on_policy, critic)
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
 
             loss = on_policy_loss + off_policy_loss
@@ -607,6 +608,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
         """update baseline and critic"""
         # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
         baseline.fit(observes, sum_dis_return)  # update value function
+        critic.fit(states, td_targets)
 
     """close sessions"""
     on_policy.close_sess()
@@ -628,9 +630,10 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
         rewards_.append(reward)
     values_ = critic.predict(states_)
     dict_states['values_'] = values_
-    td_errors = rewards_ + gamma * values_ - dict_states['values']
+    td_targets = rewards_ + gamma * values_
+    td_errors = td_targets - dict_states['values']
 
-    return td_errors
+    return td_errors, td_targets
 
 
 if __name__ == "__main__":
