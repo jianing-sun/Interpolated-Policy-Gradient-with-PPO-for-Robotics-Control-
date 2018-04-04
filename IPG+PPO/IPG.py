@@ -284,6 +284,9 @@ class OnPolicyPPO(object):
                                             name="HingeLoss")  # quadratically smooth
             self.loss = tf.reduce_sum(loss1 + loss2 + loss3, name="TotalLoss")
 
+            optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
+            self.train_op = optimizer.minimize(self.loss)
+
     def _init_session(self):
         """Launch TensorFlow session and initialize variables"""
         self.sess = tf.Session(graph=self.g)
@@ -295,23 +298,23 @@ class OnPolicyPPO(object):
 
         return self.sess.run(self.sampled_act, feed_dict=feed_dict)
 
-    def update(self, loss, observes, actions, advantages):
+    def update(self, loss, observes, actions, advantages, old_means_np, old_log_vars_np):
+
         feed_dict = {self.obs_ph: observes,
                      self.act_ph: actions,
                      self.advantages_ph: advantages,
                      self.beta_ph: self.beta,
                      self.eta_ph: self.eta,
                      self.loss: loss,
-                     self.lr_ph: self.lr * self.lr_multiplier}
-
-        optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
-        self.train_op = optimizer.minimize(self.loss)
+                     self.lr_ph: self.lr * self.lr_multiplier,
+                     self.old_means_ph: old_means_np,
+                     self.old_log_vars_ph: old_log_vars_np}
 
         kl, entropy = 0, 0
         for e in range(self.epochs):
             # TODO: need to improve data pipeline - re-feeding data every epoch
             self.sess.run(self.train_op, feed_dict)
-            kl, entropy = self.sess.run([self.loss, self.kl, self.entropy], feed_dict)
+            kl, entropy = self.sess.run([self.kl, self.entropy], feed_dict)
             if kl > self.kl_targ * 4:  # early stopping if D_KL diverges badly
                 break
         # TODO: too many "magic numbers" in next 8 lines of code, need to clean up
@@ -323,6 +326,7 @@ class OnPolicyPPO(object):
             self.beta = np.maximum(1 / 35, self.beta / 1.5)  # min clip beta
             if self.beta < (1 / 30) and self.lr_multiplier < 10:
                 self.lr_multiplier *= 1.5
+        print(loss)
 
     def close_sess(self):
         """ Close TensorFlow session """
@@ -330,7 +334,7 @@ class OnPolicyPPO(object):
 
 
 # Experience replay buffer
-class Buffer():
+class Buffer:
     def __init__(self, buffer_size=50000):
         self.buffer = []
         self.buffer_size = buffer_size
@@ -406,19 +410,6 @@ def run_episode(env, policy, scaler, animate=False):
             np.array(rewards, dtype=np.float64), np.concatenate(unscaled_obs), current_buffer)
 
 
-# def compute_qvalue(off_trajectories, val_func, gamma):
-#     for off_trajectory in off_trajectories:
-#         observes = off_trajectories[0]
-#         values = val_func.predict(observes)
-#         off_trajectory.append(values)
-#         if gamma < 0.999:  # don't scale for gamma ~= 1
-#             rewards = off_trajectory[2] * (1 - gamma)
-#         else:
-#             rewards = off_trajectory[2]
-#         q_value = rewards + np.append(values[1:] * gamma, 0)
-    # return q_value
-
-
 def compute_vvalue(trajectories, val_func):
     for on_trajectory in trajectories:  # 15 trajectories, each with 50 time steps
         observes = on_trajectory['observes']
@@ -473,11 +464,11 @@ def build_train_set(trajectories):
     advantages = np.concatenate([t['advantages'] for t in trajectories])
     # normalize advantages
     advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-6)
-    learning_sginals = np.zeros((len(trajectories), len(trajectories[0]['advantages'])))
-    for i in range(0, learning_sginals.shape[0]):
-        for j in range(0, learning_sginals.shape[1]):
-            learning_sginals[i][j] = trajectories[i]['advantages'][j]
-    return observes, actions, advantages, learning_sginals, disc_sum_rew
+    learning_signals = np.zeros((len(trajectories), len(trajectories[0]['advantages'])))
+    for i in range(0, learning_signals.shape[0]):
+        for j in range(0, learning_signals.shape[1]):
+            learning_signals[i][j] = trajectories[i]['advantages'][j]
+    return observes, actions, advantages, learning_signals, disc_sum_rew
 
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
@@ -507,69 +498,70 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
     # start training
     # initial_buff_size = 15
-    while episode < num_episodes:
-        """experience replay: there are two buffers, one is replay buffer which 
-        keep expanding with new experiences (off-policy); one is current buffer 
-        ("play" buffer) which only contains current experience (on-policy)
-        """
-        # roll-out pi for initial_buff_size episodes, T (50) time step each to
-        # collect a batch of data to R (replay buffer)
-        current_buffer = []
-        trajectories, episode_experiences = run_policy(env, on_policy, scaler, episodes=batch_size)
-        for i in range(0, batch_size):
-            for j in range(0, time_steps):
-                state, action, reward = episode_experiences[i][j]
-                buff.add(np.reshape([state, action, reward], [1, 3]))  # add to replay buffer
-                current_buffer.append(np.reshape([state, action, reward], [1, 3]))
+    with on_policy.sess as sess:
+        while episode < num_episodes:
+            """experience replay: there are two buffers, one is replay buffer which 
+            keep expanding with new experiences (off-policy); one is current buffer 
+            ("play" buffer) which only contains current experience (on-policy)
+            """
+            # roll-out pi for initial_buff_size episodes, T (50) time step each to
+            # collect a batch of data to R (replay buffer)
+            current_buffer = []
+            trajectories, episode_experiences = run_policy(env, on_policy, scaler, episodes=batch_size)
+            for i in range(0, batch_size):
+                for j in range(0, time_steps):
+                    state, action, reward = episode_experiences[i][j]
+                    buff.add(np.reshape([state, action, reward], [1, 3]))  # add to replay buffer
+                    current_buffer.append(np.reshape([state, action, reward], [1, 3]))
 
-        # current i don't use the control variate, so no need to compute Q value here
-        # """fit Qw through off-policy (use replay buffer)"""
-        # off_trajectories = buff.sample(batch_size*time_steps)  # numpy array
-        # q_values = compute_q_value(off_trajectories, off_policy, gamma)
+            # current i don't use the control variate, so no need to compute Q value here
+            # """fit Qw through off-policy (use replay buffer)"""
+            # off_trajectories = buff.sample(batch_size*time_steps)  # numpy array
+            # q_values = compute_q_value(off_trajectories, off_policy, gamma)
 
-        """fit baseline V() through on-policy (use current trajectories)"""
-        compute_vvalue(trajectories, baseline)
-        # print(trajectories)
+            """fit baseline V() through on-policy (use current trajectories)"""
+            compute_vvalue(trajectories, baseline)
+            # print(trajectories)
 
-        """compute Monte Carlo advantage estimate advantage (on-policy)"""
-        compute_advantages(trajectories, gamma, lam)
-        # here as we don't use control variate, learning_signals equal advantages but with a different shape
-        # to facilitate next step of the algorithm
-        # so in the on-policy advantages I just input with the advantages which is wrong in the strict sense
-        # TODO: change the advantages as the form of learning signal
-        add_disc_sum_rew(trajectories, gamma)  # calculated discounted sum of Rs
-        observes, on_actions, advantages, learning_signals, sum_dis_return = build_train_set(trajectories)
+            """compute Monte Carlo advantage estimate advantage (on-policy)"""
+            compute_advantages(trajectories, gamma, lam)
+            # here as we don't use control variate, learning_signals equal advantages but with a different shape
+            # to facilitate next step of the algorithm
+            # so in the on-policy advantages I just input with the advantages which is wrong in the strict sense
+            # TODO: change the advantages as the form of learning signal
+            add_disc_sum_rew(trajectories, gamma)  # calculated discounted sum of Rs
+            observes, on_actions, advantages, learning_signals, sum_dis_return = build_train_set(trajectories)
 
-        """different situations based on if we use control variate: if useCV=True, then compute
-        critic-based advantage estimate using current buffer, Q and policy
-        if useCV=False, then just center the learning signals lt,e=At,e
-        """
-        # if userCV:
-        #     pass
-        # else:
-        #     # center the learning signals = advantages, and set b = v
-        #     learning_signals = advantages
-        #     b = interpolate_ratio
+            """different situations based on if we use control variate: if useCV=True, then compute
+            critic-based advantage estimate using current buffer, Q and policy
+            if useCV=False, then just center the learning signals lt,e=At,e
+            """
+            # if userCV:
+            #     pass
+            # else:
+            #     # center the learning signals = advantages, and set b = v
+            #     learning_signals = advantages
+            #     b = interpolate_ratio
 
-        # multiply learning signals by (1-v)
-        learning_signals *= (1 - interpolate_ratio)
+            # multiply learning signals by (1-v)
+            learning_signals *= (1 - interpolate_ratio)
 
-        """sample D=S1:M from replay buffer or current buffer based on beta (M=40)"""
-        if buff.buffer_size < len(current_buffer):
-            # using on-policy samples to compute loss and optimize policy
-            samples = BatchSample(current_buffer, samples_size)
-        else:
-            # using off-policy samples to compute loss and optimize policy (always go here)
-            # TODO: what's the condition to change?
-            samples = buff.sample(samples_size)
+            """sample D=S1:M from replay buffer or current buffer based on beta (M=40)"""
+            if buff.buffer_size < len(current_buffer):
+                # using on-policy samples to compute loss and optimize policy
+                samples = BatchSample(current_buffer, samples_size)
+            else:
+                # using off-policy samples to compute loss and optimize policy (always go here)
+                # TODO: what's the condition to change?
+                samples = buff.sample(samples_size)
 
-        """compute loss function"""
-        states, actions, rewards = [np.squeeze(elem, axis=1) for elem in np.split(samples, 3, 1)]
-        states = np.array([s for s in states])
-        states = np.squeeze(states)
+            """compute loss function"""
+            states, actions, rewards = [np.squeeze(elem, axis=1) for elem in np.split(samples, 3, 1)]
+            states = np.array([s for s in states])
+            states = np.squeeze(states)
 
-        # compute PPO loss (first term in the IPO algorithm loss function)
-        with on_policy.sess as sess:
+            # compute PPO loss (first term in the IPO algorithm loss function)
+            # with on_policy.sess as sess:
             on_feed_dict = {on_policy.obs_ph: observes,
                             on_policy.act_ph: on_actions,
                             on_policy.advantages_ph: advantages,
@@ -602,13 +594,14 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             loss = on_policy_loss + off_policy_loss
 
-        """update policy using interpolated policy gradient loss function"""
-        on_policy.update(loss, observes, actions, advantages)
+            """update current policy based on current observes, actions, advantages"""
+            on_feed_dict[on_policy.loss] = tf.reduce_sum(loss)
+            on_policy.update(loss, observes, on_actions, advantages, old_means_np, old_log_vars_np)
 
-        """update baseline and critic"""
-        # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
-        baseline.fit(observes, sum_dis_return)  # update value function
-        critic.fit(states, td_targets)
+            """update baseline and critic"""
+            # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
+            baseline.fit(observes, sum_dis_return)  # update value function
+            critic.fit(states, td_targets)
 
     """close sessions"""
     on_policy.close_sess()
