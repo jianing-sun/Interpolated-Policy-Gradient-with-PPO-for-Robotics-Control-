@@ -1,6 +1,6 @@
 import gym
 
-env = gym.make('FetchReach-v0')
+env = gym.make('FetchPickAndPlace-v0')
 ob = env.reset()
 print(ob)
 env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal', 'achieved_goal'])

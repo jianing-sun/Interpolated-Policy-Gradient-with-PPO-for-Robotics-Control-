@@ -1,21 +1,11 @@
-"""
-NN Policy with KL Divergence Constraint (PPO / TRPO)
-
-Written by Patrick Coady (pat-coady.github.io)
-"""
 import numpy as np
 import tensorflow as tf
 
 
-class Policy(object):
+class OnPolicyPPO(object):
     """ NN-based policy approximation """
+
     def __init__(self, obs_dim, act_dim, kl_targ):
-        """
-        Args:
-            obs_dim: num observation dimensions (int)
-            act_dim: num action dimensions (int)
-            kl_targ: target KL divergence between pi_old and pi_new
-        """
         self.beta = 1.0  # dynamically adjusted D_KL loss multiplier
         self.eta = 50  # multiplier for D_KL-kl_targ hinge-squared loss
         self.kl_targ = kl_targ  # KL target
@@ -28,12 +18,7 @@ class Policy(object):
         self._init_session()
 
     def _build_graph(self):
-        """ Build and initialize TensorFlow graph
-            Initialize graph with all functions beginning with a dash
-            except sample() and update are used in reach.py for sampling and updating
-        """
-
-        self.g = tf.Graph()     # create a new empty graph
+        self.g = tf.Graph()  # create a new empty graph
         with self.g.as_default():
             self._placeholders()
             self._policy_nn()
@@ -59,18 +44,6 @@ class Policy(object):
         self.old_means_ph = tf.placeholder(tf.float32, (None, self.act_dim), 'old_means')
 
     def _policy_nn(self):
-        """ Neural net for policy approximation function
-
-        Policy parameterized by Gaussian means and variances. NN outputs mean
-         action based on observation. Trainable variables hold log-variances
-         for each action dimension (i.e. variances not determined by NN).
-        """
-        """
-        4 layers: h1, h2, h3 + mean
-        hidden layer 1: out size - 3770
-        hidden layer 2: out size - 800
-        hidden layer 3: out size - 170
-        """
         # hidden layer sizes determined by obs_dim and act_dim (hid2 is geometric mean)
         hid1_size = self.obs_dim * 10  # 10 empirically determined
         hid3_size = self.act_dim * 10  # 10 empirically determined
@@ -94,18 +67,12 @@ class Policy(object):
 
         # logvar_speed is used to 'fool' gradient descent into making faster updates
         # to log-variances. heuristic sets logvar_speed based on network size.
-        # to log-variances. heuristic sets logvar_speed based on network size.
-        logvar_speed = (10 * hid3_size) // 48   # integer division  = 35
+        logvar_speed = (10 * hid3_size) // 48  # integer division  = 35
         # print('logvar_speed',logvar_speed)  # 35
         log_vars = tf.get_variable('logvars', (logvar_speed, self.act_dim), tf.float32,
                                    tf.constant_initializer(0.0))  # 0
 
-        self.log_vars = tf.reduce_sum(log_vars, axis=0) - 1.0   # [-1, -1, -1......, -1]   17 dimension in total
-
-        # log_vars = tf.Variable(self.log_vars)
-        # mysess = tf.InteractiveSession()
-        # log_vars.initializer.run()
-        # print(mysess.run(log_vars))
+        self.log_vars = tf.reduce_sum(log_vars, axis=0) - 1.0  # [-1, -1, -1......, -1]   17 dimension in total
 
         print('Policy Params -- h1: {}, h2: {}, h3: {}, lr: {:.3g}, logvar_speed: {}'
               .format(hid1_size, hid2_size, hid3_size, self.lr, logvar_speed))
@@ -116,7 +83,7 @@ class Policy(object):
         Calculates log probabilities using previous step's model parameters and
         new parameters being trained.
         """
-        logp = -0.5 * tf.reduce_sum(self.log_vars)  # -0.5*-17=8.5
+        logp = -0.5 * tf.reduce_sum(self.log_vars)
         logp += -0.5 * tf.reduce_sum(tf.square(self.act_ph - self.means) /
                                      tf.exp(self.log_vars), axis=1, name="logp")
 
@@ -152,7 +119,7 @@ class Policy(object):
         """ Sample from distribution, given observation """
         self.sampled_act = (self.means +
                             tf.exp(self.log_vars / 2.0) *
-                            tf.random_normal(shape=(self.act_dim,)))   # add_5:0
+                            tf.random_normal(shape=(self.act_dim,)))  # add_5:0
 
     def _loss_train_op(self):
         """
@@ -164,23 +131,19 @@ class Policy(object):
         See: https://arxiv.org/pdf/1707.02286.pdf
         """
         with tf.name_scope('loss'):
-
             loss1 = -tf.reduce_mean(self.advantages_ph *
                                     tf.exp(self.logp - self.logp_old), name="PG")
             loss2 = tf.reduce_mean(self.beta_ph * self.kl, name="KL")
-            loss3 = self.eta_ph * tf.square(tf.maximum(0.0, self.kl - 2.0 * self.kl_targ), name="HingeLoss")  # quadratically smooth
+            loss3 = self.eta_ph * tf.square(tf.maximum(0.0, self.kl - 2.0 * self.kl_targ),
+                                            name="HingeLoss")  # quadratically smooth
             self.loss = tf.reduce_sum(loss1 + loss2 + loss3, name="TotalLoss")
 
-        optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
-        self.train_op = optimizer.minimize(self.loss)
+            optimizer = tf.train.AdamOptimizer(self.lr_ph)  # gradient descent with Adam optimizer
+            self.train_op = optimizer.minimize(self.loss)
 
     def _init_session(self):
         """Launch TensorFlow session and initialize variables"""
         self.sess = tf.Session(graph=self.g)
-
-        # TensorBoard
-        writer = tf.summary.FileWriter('tensorboard/', self.sess.graph)
-
         self.sess.run(self.init)
 
     def sample(self, obs):
@@ -189,30 +152,23 @@ class Policy(object):
 
         return self.sess.run(self.sampled_act, feed_dict=feed_dict)
 
-    def update(self, observes, actions, advantages, logger, plotter):
-        """ Update policy based on observations, actions and advantages
+    def update(self, loss, observes, actions, advantages, old_means_np, old_log_vars_np):
 
-        Args:
-            observes: observations, shape = (N, obs_dim)
-            actions: actions, shape = (N, act_dim)
-            advantages: advantages, shape = (N,)
-            logger: Logger object, see utils.py
-        """
         feed_dict = {self.obs_ph: observes,
                      self.act_ph: actions,
                      self.advantages_ph: advantages,
                      self.beta_ph: self.beta,
                      self.eta_ph: self.eta,
-                     self.lr_ph: self.lr * self.lr_multiplier}
-        old_means_np, old_log_vars_np = self.sess.run([self.means, self.log_vars],
-                                                      feed_dict)
-        feed_dict[self.old_log_vars_ph] = old_log_vars_np
-        feed_dict[self.old_means_ph] = old_means_np
-        loss, kl, entropy = 0, 0, 0
+                     self.loss: loss,
+                     self.lr_ph: self.lr * self.lr_multiplier,
+                     self.old_means_ph: old_means_np,
+                     self.old_log_vars_ph: old_log_vars_np}
+
+        kl, entropy = 0, 0
         for e in range(self.epochs):
             # TODO: need to improve data pipeline - re-feeding data every epoch
             self.sess.run(self.train_op, feed_dict)
-            loss, kl, entropy = self.sess.run([self.loss, self.kl, self.entropy], feed_dict)
+            kl, entropy = self.sess.run([self.kl, self.entropy], feed_dict)
             if kl > self.kl_targ * 4:  # early stopping if D_KL diverges badly
                 break
         # TODO: too many "magic numbers" in next 8 lines of code, need to clean up
@@ -224,19 +180,8 @@ class Policy(object):
             self.beta = np.maximum(1 / 35, self.beta / 1.5)  # min clip beta
             if self.beta < (1 / 30) and self.lr_multiplier < 10:
                 self.lr_multiplier *= 1.5
-
-        logger.log({'PolicyLoss': loss,
-                    'PolicyEntropy': entropy,
-                    'KL': kl,
-                    'Beta': self.beta,
-                    '_lr_multiplier': self.lr_multiplier})
-
-        plotter.updatePolicyEn(entropy)
-        plotter.updateBeta(self.beta)
-        plotter.updatePolicyLoss(loss)
-        plotter.updateKL(kl)
+        print(loss)
 
     def close_sess(self):
         """ Close TensorFlow session """
         self.sess.close()
-

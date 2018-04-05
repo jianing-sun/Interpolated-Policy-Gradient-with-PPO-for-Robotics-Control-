@@ -94,7 +94,6 @@ class Policy(object):
 
         # logvar_speed is used to 'fool' gradient descent into making faster updates
         # to log-variances. heuristic sets logvar_speed based on network size.
-        # to log-variances. heuristic sets logvar_speed based on network size.
         logvar_speed = (10 * hid3_size) // 48   # integer division  = 35
         # print('logvar_speed',logvar_speed)  # 35
         log_vars = tf.get_variable('logvars', (logvar_speed, self.act_dim), tf.float32,
