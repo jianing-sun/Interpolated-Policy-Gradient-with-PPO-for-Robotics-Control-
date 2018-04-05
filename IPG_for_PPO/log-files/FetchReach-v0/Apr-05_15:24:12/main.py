@@ -357,11 +357,11 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             """update baseline and critic"""
             # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
-            # with baseline.sess as sess:
-            baseline.fit(observes, sum_dis_return, logger)  # update value function
+            with baseline.sess as sess:
+                baseline.fit(observes, sum_dis_return)  # update value function
             logger.write(display=True)
-            # with critic.sess as sess:
-            critic.fit(states, td_targets, logger)
+            with critic.sess as sess:
+                critic.fit(states, td_targets)
 
     """close sessions"""
     logger.close()

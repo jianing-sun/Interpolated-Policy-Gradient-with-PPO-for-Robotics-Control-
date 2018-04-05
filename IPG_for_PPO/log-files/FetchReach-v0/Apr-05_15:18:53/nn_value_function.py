@@ -57,7 +57,7 @@ class ValueFncNN(object):
         self.sess = tf.Session(graph=self.g)
         self.sess.run(self.init)
 
-    def fit(self, x, y, logger):
+    def fit(self, x, y):
         num_batches = max(x.shape[0] // 256, 1)
         batch_size = x.shape[0] // num_batches
         y_hat = self.predict(x)                  # check explained variance prior to update
@@ -80,11 +80,6 @@ class ValueFncNN(object):
         y_hat = self.predict(x)
         loss = np.mean(np.square(y_hat - y))  # explained variance after update
         exp_var = 1 - np.var(y - y_hat) / np.var(y)  # diagnose over-fitting of val func
-
-        logger.log({'ValFuncLoss': loss,
-                    'ExplainedVarNew': exp_var,
-                    'ExplainedVarOld': old_exp_var})
-
         return loss
 
     def predict(self, x):

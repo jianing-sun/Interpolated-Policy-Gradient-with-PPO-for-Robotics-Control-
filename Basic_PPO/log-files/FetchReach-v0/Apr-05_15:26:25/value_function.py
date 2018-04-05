@@ -1,26 +1,29 @@
-import numpy as np
+"""
+State-Value Function
+
+Written by Patrick Coady (pat-coady.github.io)
+"""
+
 import tensorflow as tf
+import numpy as np
 from sklearn.utils import shuffle
 
 
-class ValueFncNN(object):
+class NNValueFunction(object):
     """ NN-based state-value function """
-
-    # TODO: so this is not a state-action function but is a state-value function nn??
-    def __init__(self, obs_dim, name):
+    def __init__(self, obs_dim):
         """
         Args:
             obs_dim: number of dimensions in observation vector (int)
         """
-        with tf.variable_scope(name):
-            self.replay_buffer_x = None
-            self.replay_buffer_y = None
-            self.obs_dim = obs_dim
-            self.epochs = 10
-            self.lr = None  # learning rate set in _build_graph()
-            self._build_graph()
-            self.sess = tf.Session(graph=self.g)
-            self.sess.run(self.init)
+        self.replay_buffer_x = None
+        self.replay_buffer_y = None
+        self.obs_dim = obs_dim
+        self.epochs = 10
+        self.lr = None  # learning rate set in _build_graph()
+        self._build_graph()
+        self.sess = tf.Session(graph=self.g)
+        self.sess.run(self.init)
 
     def _build_graph(self):
         """ Construct TensorFlow graph, including loss function, init op and train op """
@@ -57,11 +60,18 @@ class ValueFncNN(object):
         self.sess = tf.Session(graph=self.g)
         self.sess.run(self.init)
 
-    def fit(self, x, y, logger):
+    def fit(self, x, y, logger, plotter):
+        """ Fit model to current data batch + previous data batch
+
+        Args:
+            x: features
+            y: target
+            logger: logger to save training loss and % explained variance
+        """
         num_batches = max(x.shape[0] // 256, 1)
         batch_size = x.shape[0] // num_batches
-        y_hat = self.predict(x)                  # check explained variance prior to update
-        old_exp_var = 1 - np.var(y - y_hat) / np.var(y)
+        y_hat = self.predict(x)  # check explained variance prior to update
+        old_exp_var = 1 - np.var(y - y_hat)/np.var(y)
         if self.replay_buffer_x is None:
             x_train, y_train = x, y
         else:
@@ -78,14 +88,13 @@ class ValueFncNN(object):
                              self.val_ph: y_train[start:end]}
                 _, l = self.sess.run([self.train_op, self.loss], feed_dict=feed_dict)
         y_hat = self.predict(x)
-        loss = np.mean(np.square(y_hat - y))  # explained variance after update
+        loss = np.mean(np.square(y_hat - y))         # explained variance after update
         exp_var = 1 - np.var(y - y_hat) / np.var(y)  # diagnose over-fitting of val func
 
         logger.log({'ValFuncLoss': loss,
                     'ExplainedVarNew': exp_var,
                     'ExplainedVarOld': old_exp_var})
-
-        return loss
+        plotter.updateValFcLoss(loss)
 
     def predict(self, x):
         """ Predict method """

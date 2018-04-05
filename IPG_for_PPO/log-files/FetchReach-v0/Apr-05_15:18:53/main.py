@@ -253,8 +253,9 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     episode = 0
 
     # start training
-    with on_policy.sess as sess:
-        while episode < num_episodes:
+    while episode < num_episodes:
+        # while episode < num_episodes:
+        with on_policy.sess as sess:
             """experience replay: there are two buffers, one is replay buffer which 
             keep expanding with new experiences (off-policy); one is current buffer 
             ("play" buffer) which only contains current experience (on-policy)
@@ -357,11 +358,9 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             """update baseline and critic"""
             # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
-            # with baseline.sess as sess:
-            baseline.fit(observes, sum_dis_return, logger)  # update value function
-            logger.write(display=True)
-            # with critic.sess as sess:
-            critic.fit(states, td_targets, logger)
+        baseline.fit(observes, sum_dis_return)  # update value function
+        logger.write(display=True)
+        critic.fit(states, td_targets)
 
     """close sessions"""
     logger.close()
