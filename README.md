@@ -1,5 +1,6 @@
 ## Interpolated Policy Gradient for PPO
 
+- Interpolated Policy Gradient is an approach to merging on- and off-policy updates for deep reinforcement learning.
 - The main algorithm used here is Proximal Policy Gradient (PPO) for continuous control task. Basic environment from a newly introduced environment - Robotics. It is a multi-goal environment from OpanAI Gym and use the MuJoCo physic engine for fast and accurate simulation. 
 - Mainly based on Fetch environment with four task and start from FetchReach-v0, the other three are FetchPush, FetchSlide, FetchPickAndPlace. 
 - Parameters changing process during experiments will be saved at **plot-files**. So far *Success Rate*, *Mean Rewards*, *Policy Entropy* have obvious regular changing and they are important results/parameters.
@@ -15,14 +16,18 @@
   - [ ] Generalize to hindsight experience replay and compare with experience replay 
   - [ ] Change tanh to ReLU
 - Reference:
-
-
-  - [Proximal Policy Gradient](https://arxiv.org/pdf/1707.02286.pdf)
+- [Proximal Policy Gradient](https://arxiv.org/pdf/1707.02286.pdf)
   - [Trust Region Policy Gradient](https://arxiv.org/pdf/1502.05477.pdf)
   - [Interpolated Policy Gradient](https://arxiv.org/pdf/1706.00387.pdf)
   - [Hindsight Experience Replay](http://papers.nips.cc/paper/7090-hindsight-experience-replay.pdf)
   - [Generalized Advantage Estimator](https://arxiv.org/pdf/1506.02438.pdf)
   - [Multi-goal Reinforcement Learning](https://d4mucfpksywv.cloudfront.net/research-covers/ingredients-for-robotics-research/technical-report.pdf)
+
+
+
+- Pseduo-code for Interpolated Policy Gradient:
+
+![](https://ws3.sinaimg.cn/large/006tNc79gy1fq1pkn1c05j314i0jqgr1.jpg)
 
 ```Python
  "CODE IS FAR AWAY FROM BUG WITH THE ANIMAL PROTECTING"
