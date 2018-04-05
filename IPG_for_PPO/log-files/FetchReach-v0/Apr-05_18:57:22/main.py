@@ -44,7 +44,6 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
                       'unscaled_obs': unscaled_obs}
         trajectories.append(trajectory)
         episode_experiences.append(episode_experience)
-        success_rates.append(success_rate)
     unscaled = np.concatenate([t['unscaled_obs'] for t in trajectories])
     scaler.update(unscaled)  # update running statistics for scaling observations
 
@@ -220,9 +219,9 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
-    """ main function for the overall process of interpolated policy gradient (off-line update)
-    :param num_episodes: total episodes numbers
-    :param batch_size: in every big episode, after batch_size times episodes, we update the policy and neural networks
+    """ main function for the overall process of interpolated policy gradient
+    :param num_episodes: big episodes numbers
+    :param batch_size: in every big episode, there would be batch_size number episodes inside
     """
 
     # initialize gym environment and get observations and actions

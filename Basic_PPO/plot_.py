@@ -49,6 +49,7 @@ class Plot:
         plot_dict['Policy Loss'] = self.pPolicyLoss
         plot_dict['Policy Entropy'] = self.pPolicyEn
         plot_dict['Beta'] = self.pBeta
+        plot_dict['CriticLoss'] = self.pValFcLoss
         plot_dict['Success Rate'] = self.pSuccessRate
         return plot_dict
 
