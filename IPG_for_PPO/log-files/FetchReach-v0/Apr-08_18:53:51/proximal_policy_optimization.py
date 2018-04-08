@@ -173,7 +173,7 @@ class OnPolicyPPO(object):
         for e in range(self.epochs):
             # TODO: need to improve data pipeline - re-feeding data every epoch
             self.sess.run(self.train_op, feed_dict)
-            loss_, kl, entropy = self.sess.run([self.loss, self.kl, self.entropy], feed_dict)
+            loss, kl, entropy = self.sess.run([self.loss, self.kl, self.entropy], feed_dict)
             if kl > self.kl_targ * 4:  # early stopping if D_KL diverges badly
                 break
         # TODO: too many "magic numbers" in next 8 lines of code, need to clean up
@@ -186,7 +186,7 @@ class OnPolicyPPO(object):
             if self.beta < (1 / 30) and self.lr_multiplier < 10:
                 self.lr_multiplier *= 1.5
 
-        logger.log({'NewPolicyLoss': loss_,
+        logger.log({'NewPolicyLoss': loss,
                     'PolicyEntropy': entropy,
                     'KL': kl,
                     'Beta': self.beta,
@@ -194,7 +194,7 @@ class OnPolicyPPO(object):
 
         plotter.updatePolicyEn(entropy)
         plotter.updateBeta(self.beta)
-        plotter.updateTotalLoss(loss_)
+        plotter.updateTotalLoss(loss)
         plotter.updateKL(kl)
 
     def close_sess(self):

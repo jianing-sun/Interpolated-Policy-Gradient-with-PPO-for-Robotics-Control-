@@ -5,7 +5,7 @@
 - Mainly based on Fetch environment with four task and start from FetchReach-v0, the other three are FetchPush, FetchSlide, FetchPickAndPlace. 
 - Parameters changing process during experiments will be saved at **plot-files**. So far *Success Rate*, *Mean Rewards*, *Policy Entropy* have obvious regular changing and they are important results/parameters.
 - **Problems so far:**
-  - [ ] **Not always have good results, sometimes it would be even worse sometimes it would be similar with the original PPO experiments. One of the reasons I think it's the experiment environment/task is too simple (simple reaching task), other reaons might be about the parameters.**
+  - [ ] **Not always have good results, sometimes it would be even worse sometimes it would be similar with the original PPO experiments. One of the reasons I think it's the experiment environment/task is too simple (simple reaching task), other reasons might be about the hyperparameters.**
   - [ ] The learning process has higher variance, in some episodes the mean reward would jump from -26 to -34 which cause some "burrs" for figures.
 
 
@@ -18,6 +18,7 @@
   - [ ] More experiments on pushing, sliding, pick&place
   - [ ] Generalize to hindsight experience replay and compare with experience replay 
   - [ ] Change tanh to ReLU
+  - [ ] For pushing, sliding tasks, need to train more episodes (in original papar, they train for 50 epochs (one epoch consists of 19 · 2 · 50 = 1 900 full episodes, which amounts to a total of 4.75 · 106 timesteps). And also **improve the time steps to 2500 per episode** for these tasks.
 - Reference:
   - [Proximal Policy Gradient](https://arxiv.org/pdf/1707.02286.pdf)
   - [Trust Region Policy Gradient](https://arxiv.org/pdf/1502.05477.pdf)
@@ -58,3 +59,4 @@
  "CODE IS FAR AWAY FROM BUG WITH THE ANIMAL PROTECTING"
 ```
 
+​	

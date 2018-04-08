@@ -204,7 +204,7 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
     states_ = []
     rewards_ = []
     for state in states:
-        action = policy.sample(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
+        action = policy.sample(np.array(state).reshape(1, 17)).reshape((1, -1)).astype(np.float64)
         state_, reward, done, _ = env.step(action)
         state_ = np.append(state_, [state[-1]+0.001]) # TODO: what if the timestep is the final step in an episode?
         states_.append(state_)
@@ -361,7 +361,6 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
             plotter.updateOffPolicyLoss(off_policy_loss)
             loss = on_policy_loss + off_policy_loss
-
             print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, loss))
             print("")
 
