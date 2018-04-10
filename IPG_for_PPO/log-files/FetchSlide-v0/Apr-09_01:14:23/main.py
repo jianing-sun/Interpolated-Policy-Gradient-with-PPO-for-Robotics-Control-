@@ -227,7 +227,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
     # initialize gym environment and get observations and actions
     env = gym.make(env_name)
-    env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal'])
+    env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal', 'achieved_goal'])
     obs_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
 
