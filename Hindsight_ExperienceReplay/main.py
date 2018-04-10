@@ -295,32 +295,36 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
                     buff.add(np.reshape([state[0], action, reward], [1, 3]))  # add to replay buffer
                     current_buffer.append(np.reshape([state[0], action, reward], [1, 3]))
 
-                    if HER:
-                        # select one timestep in an episode for each trajectory in the batch
-                        her_timesteps = time_steps
-                        her_batchsize = batch_size
-                        t_samples = np.random.randint(her_timesteps, size=her_batchsize)
+            if HER:
+                # select one timestep in an episode for each trajectory in the batch
+                her_timesteps = time_steps
+                her_batchsize = batch_size
+                t_samples = np.random.randint(her_timesteps, size=her_batchsize)
 
-                        # Select future time indexes proportional with probability future_p. These will
-                        # be used for HER replay by substituting in future goals.
-                        her_indexes = np.where(np.random.uniform(size=batch_size) < future_p)
-                        future_offset = np.random.uniform(size=her_batchsize) * (her_timesteps - t_samples)
-                        future_offset = future_offset.astype(int)
-                        future_ts = (t_samples + future_offset)[her_indexes]
+                # Select future time indexes proportional with probability future_p. These will
+                # be used for HER replay by substituting in future goals.
+                her_indexes = np.where(np.random.uniform(size=batch_size) < future_p)
+                future_offset = np.random.uniform(size=her_batchsize) * (her_timesteps - t_samples)
+                future_offset = future_offset.astype(int)
+                future_ts = (t_samples + future_offset)[her_indexes]
 
-                        # Replace goal with achieved goal but only for the previously-selected HER transitions
-                        # (as defined by her_indexes). For the other transitions, keep the original goal.
-                        her_indexes = np.squeeze(np.array(her_indexes))
-                        for her_index in range(0, len(her_indexes)):
-                            for future_t in range(0, len(future_ts)):
-                                future_ag = episode_experiences[her_indexes[her_index]][future_ts[future_t]][0][1]
-                                for k in range(0, time_steps):
-                                    # Substitute desired_goal with achieved_goal
-                                    episode_experiences[her_index][k][0][0][-4:-1] = future_ag
-                                    # Re-compute reward since we substitute the desired_goal with the achieved_goal
-                                    # in some random episodes
-                                    new_reward = env.compute_reward(achieved_goal=episode_experiences[her_index][k][0][1], desired_goal=future_ag, info=info)
+                # Replace goal with achieved goal but only for the previously-selected HER transitions
+                # (as defined by her_indexes). For the other transitions, keep the original goal.
+                her_indexes = np.squeeze(np.array(her_indexes))
 
+                for her_index in range(0, len(her_indexes)):
+                    for future_t in range(0, len(future_ts)):
+                        future_ag = episode_experiences[her_indexes[her_index]][future_ts[future_t]][0][1]
+
+                        for j in range(0, her_timesteps):
+                            state, action, reward, info = episode_experiences[her_index][j]
+                            # Substitute desired_goal with achieved_goal
+                            state[0][-4:-1] = future_ag
+                            # Re-compute reward since we substitute the desired_goal with the achieved_goal
+                            # in some random episodes
+                            new_reward = env.compute_reward(achieved_goal=state[1],
+                                                            desired_goal=future_ag, info=info)
+                            buff.add(np.reshape([state[0], action, new_reward], [1, 3]))
 
             # so far i don't use the control variate, so no need to compute Q value here
             # """fit Qw through off-policy (use replay buffer)"""
