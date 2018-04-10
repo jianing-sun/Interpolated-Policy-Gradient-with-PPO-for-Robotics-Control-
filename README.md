@@ -1,4 +1,4 @@
-##IPO_for_PPO
+## IPO_for_PPO
 
 - Interpolated Policy Gradient is an approach to **merging on- and off-policy updates for deep reinforcement learning.**
 
@@ -24,9 +24,9 @@
 
 - Pseudo-code for HER based on DDPG (in my experiment I use IPG with PPO)
 
-  ![image-20180410122029419](/var/folders/gn/ryfdjg7537z8w1tkpnm2np5r0000gn/T/abnerworks.Typora/image-20180410122029419.png)
+  ![](https://ws4.sinaimg.cn/large/006tKfTcgy1fq83lve7xoj318u0zcalx.jpg)
 
-##TODO:
+## TODO:
 
 - [x] Combine with Experience Replay!!
 - [x] Clean up current neural networks settings and 
@@ -39,7 +39,7 @@
 - [ ] Change mini batch size to 256 (so far is 500)
 - [x] For pushing, sliding tasks, need to train more episodes (in original papar, they train for 50 epochs (one epoch consists of 19 · 2 · 50 = 1 900 full episodes, which amounts to a total of 4.75 · 106 timesteps). And also **improve the time steps to 2500 per episode** for these tasks. (Should not change the time steps configuration in Gym, but must train with much more episodes, in Multi-goal Reinforcement learning (no.5 reference), they train more than 50000 episodes to see little improvement).
 
-##Reference:
+## Reference:
 
 - [Proximal Policy Gradient](https://arxiv.org/pdf/1707.02286.pdf)
 - [Trust Region Policy Gradient](https://arxiv.org/pdf/1502.05477.pdf)
