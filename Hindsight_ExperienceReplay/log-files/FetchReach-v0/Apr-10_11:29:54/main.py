@@ -325,7 +325,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
                             # in some random episodes
                             new_reward = env.compute_reward(achieved_goal=state[1],
                                                             desired_goal=future_ag, info=info)
-                            # print("old_reward: {}. new_reward: {}.".format(reward,new_reward))
+                            print("old_reward: {}. new_reward: {}.".format(reward,new_reward))
                             buff.add(np.reshape([state[0], action, new_reward], [1, 3]))
 
             # so far i don't use the control variate, so no need to compute Q value here
