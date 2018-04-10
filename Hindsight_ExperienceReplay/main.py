@@ -95,12 +95,12 @@ def run_episode(env, policy, scaler, animate=False):
         observes.append(_obs[0])        # center and scale observations
         action = policy.sample(_obs[0].reshape(1, 14)).reshape((1, -1)).astype(np.float64)
         actions.append(action)
-        obs, reward, done, _ = env.step(action)
+        obs, reward, done, info = env.step(action)
         if not isinstance(reward, float):
             reward = np.asscalar(reward)
         rewards.append(reward)
         step += 1e-3  # increment time step feature
-        current_buffer.append((temp_obs, action, reward))
+        current_buffer.append((temp_obs, action, reward, info))
 
     success_rate = rewards.count(-0.0) / len(rewards)
     return (np.concatenate(observes), np.concatenate(actions),
@@ -291,7 +291,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             for i in range(0, batch_size):
                 for j in range(0, time_steps):
-                    state, action, reward = episode_experiences[i][j]
+                    state, action, reward, info = episode_experiences[i][j]
                     buff.add(np.reshape([state[0], action, reward], [1, 3]))  # add to replay buffer
                     current_buffer.append(np.reshape([state[0], action, reward], [1, 3]))
 
@@ -314,12 +314,15 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
                         for her_index in range(0, len(her_indexes)):
                             for future_t in range(0, len(future_ts)):
                                 future_ag = episode_experiences[her_indexes[her_index]][future_ts[future_t]][0][1]
-                                for j in range(0, time_steps):
-                                    episode_experiences[her_index][j][0][0][-4:-1] = future_ag
-                        print("hehe")
+                                for k in range(0, time_steps):
+                                    # Substitute desired_goal with achieved_goal
+                                    episode_experiences[her_index][k][0][0][-4:-1] = future_ag
+                                    # Re-compute reward since we substitute the desired_goal with the achieved_goal
+                                    # in some random episodes
+                                    new_reward = env.compute_reward(achieved_goal=episode_experiences[her_index][k][0][1], desired_goal=future_ag, info=info)
 
 
-            # current i don't use the control variate, so no need to compute Q value here
+            # so far i don't use the control variate, so no need to compute Q value here
             # """fit Qw through off-policy (use replay buffer)"""
             # off_trajectories = buff.sample(batch_size*time_steps)  # numpy array
             # q_values = compute_q_value(off_trajectories, off_policy, gamma)
