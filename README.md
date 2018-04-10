@@ -11,7 +11,8 @@
 - **Problems so far:**
   - [ ] **Not always have good results, sometimes it would be even worse sometimes it would be similar with the original PPO experiments. One of the reasons I think it's the experiment environment/task is too simple (simple reaching task), other reasons might be about the hyperparameters.**
   - [ ] The learning process has higher variance, in some episodes the mean reward would jump from -26 to -34 which cause some "burrs" for figures.
-  - [ ] For complicated tasks it has a bad perforcement.
+  - [ ] For complicated tasks it has a bad performance.
+  - [ ] Change the critic to state-action based instead only state based.
 
 - Pseudo-code for IPG:
 
