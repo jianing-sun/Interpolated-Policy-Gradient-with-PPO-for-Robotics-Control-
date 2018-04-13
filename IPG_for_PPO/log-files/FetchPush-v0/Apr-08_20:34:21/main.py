@@ -9,7 +9,7 @@ import tensorflow as tf
 
 from IPG_for_PPO.nn_value_function import ValueFncNN
 from IPG_for_PPO.utils import Scaler, Logger, Plotter
-from IPG_for_PPO.proximal_policy_optimization import OnPolicyPPO
+from IPG_for_PPO.PPO import OnPolicyPPO
 from IPG_for_PPO.replay_buffer import Buffer
 
 

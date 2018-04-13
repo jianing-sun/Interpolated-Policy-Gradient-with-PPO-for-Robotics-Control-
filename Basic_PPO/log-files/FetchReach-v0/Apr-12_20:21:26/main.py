@@ -66,11 +66,9 @@ def init_gym(env_name):
         number of action dimensions (int)
     """
     env = gym.make(env_name)
-    gym.spaces.seed(1234)
     env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal', 'achieved_goal'])
     obs_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
-
 
     return env, obs_dim, act_dim
 
