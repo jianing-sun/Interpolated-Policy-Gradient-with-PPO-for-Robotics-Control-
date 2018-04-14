@@ -250,7 +250,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     replay_k = 4
     future_p = 1 - (1. / (1 + replay_k))
     interpolate_ratio = 0.2  # set v
-    samples_size = 256
+    samples_size = 64
 
     # logger and plotter from utilies
     now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime(

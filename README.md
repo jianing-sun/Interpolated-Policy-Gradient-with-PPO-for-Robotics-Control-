@@ -1,8 +1,10 @@
-- Initial Result for FetchReach-v0 environment compared with IPG and PPO:
+- Some Results based on FetchReach-v0 environment between IPG and PPO:
 
 <img src="https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0412.png" width="500px" />
 
+<img src="https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0414-amend-onpolicy-loss.png" width="500px" />
 
+![batch size = 256]("https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0414-amend-onpolicy-loss-256.png")
 
 - TODO:
 
