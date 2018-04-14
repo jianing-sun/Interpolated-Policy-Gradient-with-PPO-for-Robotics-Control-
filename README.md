@@ -4,7 +4,9 @@
 
 <img src="https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0414-amend-onpolicy-loss.png" width="500px" />
 
-![batch size = 256]("https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0414-amend-onpolicy-loss-256.png")
+<img src="https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0414-amend-onpolicy-loss-256.png" width="500px" />
+
+(Last one is the result after changing batch size to 256)
 
 - TODO:
 
