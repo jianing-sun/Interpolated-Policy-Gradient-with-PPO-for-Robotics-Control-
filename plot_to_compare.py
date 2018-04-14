@@ -23,7 +23,7 @@ print(episode1)
 print(meanReward1)
 
 
-ipgppo = './IPG_for_PPO/log-files/FetchReach-v0/Apr-12_23:16-Seed1234/log.csv'
+ipgppo = './IPG_for_PPO/log-files/FetchReach-v0/Apr-14_amendOnpolicyLoss-1234/log.csv'
 h_episode = '_Episode'
 h_meanReward = '_MeanReward'
 
@@ -49,5 +49,5 @@ plt.legend()
 
 
 path = os.path.join('./Results')
-plt.savefig(os.path.join(path, '0412'))
+plt.savefig(os.path.join(path, '0414-amend-onpolicy-loss'))
 

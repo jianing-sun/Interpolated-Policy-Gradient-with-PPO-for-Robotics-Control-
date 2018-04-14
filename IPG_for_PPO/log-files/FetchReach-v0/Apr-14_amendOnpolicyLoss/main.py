@@ -344,6 +344,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             on_feed_dict[on_policy.old_means_ph] = old_means_np
 
             sess.run(on_policy.train_op, on_feed_dict)
+            # on_policy.logp = new_logp
 
             # compute loss
             on_policy_loss = sess.run(on_policy.loss, feed_dict=on_feed_dict)

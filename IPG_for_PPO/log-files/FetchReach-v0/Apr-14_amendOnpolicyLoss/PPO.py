@@ -94,6 +94,14 @@ class OnPolicyPPO(object):
                                          tf.exp(self.old_log_vars_ph), axis=1)
         self.logp_old = logp_old
 
+    def getlogp(self):
+        logp = -0.5 * tf.reduce_sum(self.log_vars)
+        logp += -0.5 * tf.reduce_sum(tf.square(self.act_ph - self.means) /
+                                     tf.exp(self.log_vars), axis=1, name="logp")
+
+        return logp
+
+
     def _kl_entropy(self):
         """
         Add to Graph:
