@@ -6,19 +6,19 @@ from IPG_for_PPO.Critic.QFunction import compile_function
 
 
 class CriticEval:
-    def init_critic(self,
-                    qf,
-                    policy,
-                    min_pool_size=10000,
-                    replay_pool_size=1000000,
-                    replacement_prob=1.0,
-                    qf_batch_size=32,
-                    qf_weight_decay=0.,
-                    qf_update_method='adam',
-                    qf_learning_rate=1e-3,
-                    qf_use_target=True,
-                    soft_target_tau=0.001,
-                    ):
+    def __init__(self,
+                 qf,
+                 policy,
+                 min_pool_size=10000,
+                 replay_pool_size=1000000,
+                 replacement_prob=1.0,
+                 qf_batch_size=32,
+                 qf_weight_decay=0.,
+                 qf_update_method='adam',
+                 qf_learning_rate=1e-3,
+                 qf_use_target=True,
+                 soft_target_tau=0.001,
+                 ):
         self.soft_target_tau = soft_target_tau
         self.min_pool_size = min_pool_size
         self.replay_pool_size = replay_pool_size
@@ -39,8 +39,8 @@ class CriticEval:
     def init_opt_critic(self, obs_dim, act_dim):
         target_qf = self.qf
         extra_dims = 1
-        obs = tf.placeholder(tf.float32, shape=[None] * extra_dims + obs_dim, name='qf_obs')
-        action = tf.placeholder(tf.float32, shape=[None] * extra_dims + act_dim, name='qf_action')
+        obs = tf.placeholder(tf.float32, shape=[None] * extra_dims + list([obs_dim]), name='qf_obs')
+        action = tf.placeholder(tf.float32, shape=[None] * extra_dims + list([act_dim]), name='qf_action')
 
         yvar = tf.placeholder(dtype=tf.float32, shape=[None], name='ys')
 
