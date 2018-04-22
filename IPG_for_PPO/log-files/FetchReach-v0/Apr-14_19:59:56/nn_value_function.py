@@ -43,7 +43,7 @@ class ValueFncNN(object):
             out = tf.layers.dense(out, hid2_size, tf.nn.relu,
                                   kernel_initializer=tf.random_normal_initializer(
                                       stddev=np.sqrt(1 / hid1_size)), name="h2")
-            out = tf.layers.dense(out, hid3_size, tf.tanh,
+            out = tf.layers.dense(out, hid3_size, tf.nn.relu,
                                   kernel_initializer=tf.random_normal_initializer(
                                       stddev=np.sqrt(1 / hid2_size)), name="h3")
             out = tf.layers.dense(out, 1,

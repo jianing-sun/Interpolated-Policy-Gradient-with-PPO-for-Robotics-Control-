@@ -104,8 +104,8 @@ def run_episode(env, policy, scaler, animate=False):
 def compute_vvalue(trajectories, val_func):
 
     """evaluate the values for all the trajectories in current big episode.
-    The size of the values should be the batch_size (20) * total timesteps for each episode (50)
-    Calculate the values by using the ValueFncNN class, and save them into the trajectory dict
+    The size of the values should be the batch_size (15) * total timesteps for each episode (50)
+    Calculate the values by using the ValueFncNN class, and save that into the trajectory dict
     """
 
     for on_trajectory in trajectories:  # 15 trajectories, each with 50 time steps
@@ -116,8 +116,8 @@ def compute_vvalue(trajectories, val_func):
 
 def critic_compute_vvalue(dict_states, val_func):
 
-    """the critic neural network is the same structure of the value function neural network used to compute the advantages,
-    but they are TWO neural networks with different shape of input, so for interpolated policy gradient, here I used
+    """the critic neural network is the same structure of the value function neural network used to count the advantages,
+    but there are TWO neural networks with different shape of input, so for interpolated policy gradient, here I used
     this critic nn to compute the off-policy TD target based on random samples from the replay buffer.
     This is a medium step to compute the TD error. As the input shape is different we can't use the same one to predict.
     """
@@ -205,10 +205,9 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
     rewards_ = []
     for state in states:
         # action = policy.sample(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
-        action = policy.getMean(np.array(state)
-                                .reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
+        action = policy.getMean(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
         state_, reward, done, _ = env.step(action)
-        state_ = np.append(state_, [state[-1]+0.001])      # TODO: what if the timestep is the final step in an episode?
+        state_ = np.append(state_, [state[-1]+0.001]) # TODO: what if the timestep is the final step in an episode?
         states_.append(state_)
         rewards_.append(reward)
     # compute one-step forward values_
@@ -351,7 +350,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             # times (1/ET)
             # on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
-            surr_loss = on_policy_loss
+            on_policy_loss = on_policy_loss
 
             # compute off-policy loss (second term in the IPG algorithm loss function)
             """
@@ -368,15 +367,15 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             off_policy_loss, td_targets = TD(env, dict_states, on_policy, critic)
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
             plotter.updateOffPolicyLoss(off_policy_loss)
-            surr_loss += off_policy_loss
+            loss = on_policy_loss - off_policy_loss
 
-            print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, surr_loss))
+            print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, loss))
             print("")
 
             """update current policy based on current observes, actions, advantages"""
-            on_feed_dict[on_policy.loss] = tf.reduce_sum(surr_loss)
-            on_policy.update(surr_loss, observes, on_actions, advantages, old_means_np, old_log_vars_np, logger, plotter)
-
+            on_feed_dict[on_policy.loss] = tf.reduce_sum(loss)
+            on_policy.update(loss, observes, on_actions, advantages, old_means_np, old_log_vars_np, logger, plotter)
+            # on_policy.logp = new_logp
             """update baseline and critic"""
             # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)
             # with baseline.sess as sess:

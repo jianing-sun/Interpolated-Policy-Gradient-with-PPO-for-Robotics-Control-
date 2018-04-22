@@ -18,9 +18,10 @@
 - [x] More debug, verify if the algorithm is working as it was totally created based on my understanding of the algorithm diagram from the initial paper (it works)
 - [ ] More experiments on pushing, sliding, pick&place
 - [x] Generalize to hindsight experience replay and compare with experience replay 
-- [ ] Change tanh to ReLU
-- [ ] Change mini batch size to 256 (so far is 500)
+- [x] Change tanh to ReLU
+- [x] Change mini batch size to 256 (so far is 500)
 - [x] For pushing, sliding tasks, need to train more episodes (in original papar, they train for 50 epochs (one epoch consists of 19 · 2 · 50 = 1 900 full episodes, which amounts to a total of 4.75 · 106 timesteps). And also **improve the time steps to 2500 per episode** for these tasks. (Should not change the time steps configuration in Gym, but must train with much more episodes, in Multi-goal Reinforcement learning (no.5 reference), they train more than 50000 episodes to see little improvement).
+- [ ] Try to delete coefficient (1/ET) for on-policy loss
 - Reference:
   - [Proximal Policy Gradient](https://arxiv.org/pdf/1707.02286.pdf)
   - [Trust Region Policy Gradient](https://arxiv.org/pdf/1502.05477.pdf)
@@ -63,4 +64,4 @@
 
 Jianing Sun
 
-Last modified: April 14th, 2018
+Last modified: April 21th, 2018

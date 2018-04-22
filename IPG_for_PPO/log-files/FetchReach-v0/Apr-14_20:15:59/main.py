@@ -104,8 +104,8 @@ def run_episode(env, policy, scaler, animate=False):
 def compute_vvalue(trajectories, val_func):
 
     """evaluate the values for all the trajectories in current big episode.
-    The size of the values should be the batch_size (20) * total timesteps for each episode (50)
-    Calculate the values by using the ValueFncNN class, and save them into the trajectory dict
+    The size of the values should be the batch_size (15) * total timesteps for each episode (50)
+    Calculate the values by using the ValueFncNN class, and save that into the trajectory dict
     """
 
     for on_trajectory in trajectories:  # 15 trajectories, each with 50 time steps
@@ -116,8 +116,8 @@ def compute_vvalue(trajectories, val_func):
 
 def critic_compute_vvalue(dict_states, val_func):
 
-    """the critic neural network is the same structure of the value function neural network used to compute the advantages,
-    but they are TWO neural networks with different shape of input, so for interpolated policy gradient, here I used
+    """the critic neural network is the same structure of the value function neural network used to count the advantages,
+    but there are TWO neural networks with different shape of input, so for interpolated policy gradient, here I used
     this critic nn to compute the off-policy TD target based on random samples from the replay buffer.
     This is a medium step to compute the TD error. As the input shape is different we can't use the same one to predict.
     """
@@ -205,8 +205,7 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
     rewards_ = []
     for state in states:
         # action = policy.sample(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
-        action = policy.getMean(np.array(state)
-                                .reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
+        action = policy.getMean(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
         state_, reward, done, _ = env.step(action)
         state_ = np.append(state_, [state[-1]+0.001])      # TODO: what if the timestep is the final step in an episode?
         states_.append(state_)
