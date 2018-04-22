@@ -155,10 +155,13 @@ class OnPolicyPPO(object):
         feed_dict = {self.obs_ph: obs}
         return self.sess.run(self.means, feed_dict=feed_dict)
 
+    def getMeanAndLogVar(self, obs):
+        feed_dict = {self.obs_ph: obs}
+        return self.sess.run([self.means, self.log_vars], feed_dict=feed_dict)
+
     def sample(self, obs):
         """Draw sample from policy distribution"""
         feed_dict = {self.obs_ph: obs}
-
         return self.sess.run(self.sampled_act, feed_dict=feed_dict)
 
     def update(self, loss, observes, actions, advantages, old_means_np, old_log_vars_np, logger, plotter):

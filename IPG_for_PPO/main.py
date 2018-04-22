@@ -1,17 +1,18 @@
 import argparse
-import random
 import datetime
+import random
 
 import gym
 import numpy as np
 import scipy.signal
 import tensorflow as tf
 
-from IPG_for_PPO.nn_value_function import ValueFncNN
-from IPG_for_PPO.utils import Scaler, Logger, Plotter
 from IPG_for_PPO.PPO import OnPolicyPPO
+from IPG_for_PPO.nn_value_function import ValueFncNN
 from IPG_for_PPO.replay_buffer import Buffer
-
+from IPG_for_PPO.utils import Scaler, Logger, Plotter
+from IPG_for_PPO.Critic.QFunction import ContinuousQFunction
+from IPG_for_PPO.Critic.CriticEval import CriticEval
 
 # TODO: integrate this method within the replay buffer class
 def BatchSample(current_buffer, size):
@@ -89,12 +90,13 @@ def run_episode(env, policy, scaler, animate=False):
         observes.append(obs)        # center and scale observations
         action = policy.sample(obs).reshape((1, -1)).astype(np.float64)
         actions.append(action)
-        obs, reward, done, _ = env.step(action)
+        obs, reward, done, info = env.step(action)
         if not isinstance(reward, float):
             reward = np.asscalar(reward)
         rewards.append(reward)
         step += 1e-3  # increment time step feature
-        current_buffer.append((temp_obs, action, reward))
+        # current_buffer.append((temp_obs, action, reward))
+        current_buffer.append((temp_obs, action, reward, obs, info))  # add next_observations and info (terminals)
 
     success_rate = rewards.count(-0.0) / len(rewards)
     return (np.concatenate(observes), np.concatenate(actions),
@@ -254,8 +256,10 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     # advantages, and one is critic
     baseline = ValueFncNN(obs_dim, name='baseline')
     critic = ValueFncNN(obs_dim, name='critic')
+    qf = ContinuousQFunction(obs_dim, act_dim)
     on_policy = OnPolicyPPO(obs_dim, act_dim, kl_targ)
-
+    ceval = CriticEval.init_critic(qf, on_policy)
+    ceval.init_opt_critic(obs_dim, act_dim)
     # initialize replay buffer
     buff = Buffer(1000000)
 
@@ -281,9 +285,10 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             for i in range(0, batch_size):
                 for j in range(0, time_steps):
-                    state, action, reward = episode_experiences[i][j]
-                    buff.add(np.reshape([state, action, reward], [1, 3]))  # add to replay buffer
-                    current_buffer.append(np.reshape([state, action, reward], [1, 3]))
+                    state, actions, reward, states_, terminals = episode_experiences[i][j]
+                    # TODO: add next_obs and terminals (1, 5)
+                    buff.add(np.reshape([state, actions, reward, states_, terminals], [1, 5]))  # add to replay buffer
+                    current_buffer.append(np.reshape([state, actions, reward], [1, 3]))
 
             # current i don't use the control variate, so no need to compute Q value here
             # """fit Qw through off-policy (use replay buffer)"""
@@ -308,13 +313,6 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             critic-based advantage estimate using current buffer, Q and policy
             if useCV=False, then just center the learning signals lt,e=At,e
             """
-            # if userCV:
-            #     pass
-            # else:
-            #     # center the learning signals = advantages, and set b = v
-            #     learning_signals = advantages
-            #     b = interpolate_ratio
-
             # multiply learning signals by (1-v)
             learning_signals *= (1 - interpolate_ratio)
 
@@ -358,14 +356,19 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             consider using temporal difference as the critic, then delta Q = Rt+1 + gamma * Q(St+1, At+1) - Q(St, At)
             then the loss is the sum over all the batch samples
             """
-            # dict_states is a dict for random samples from replay buffer, not for trajectory
-            dict_states = {'states': states}
+            # dict_batch is a dict for random samples from replay buffer, not for trajectory
+            dict_batch = {'states': states}
+            dict_batch['rewards'] = rewards
+            dict_batch['actions'] = actions
+            dict_batch['next_obs'] = states_
+            dict_batch['terminals'] = terminals
             # evaluate values (Vt) for samples and add them to   the dict by using the critic neural network
-            critic_compute_vvalue(dict_states, critic)
+            # critic_compute_vvalue(dict_batch, critic)
             # compute (td target - current values) as delta Qw(Sm) under PPO policy
             b = interpolate_ratio
             # compute Rt+1 + gamma * Q(St+1, At+1)
-            off_policy_loss, td_targets = TD(env, dict_states, on_policy, critic)
+            off_policy_loss = qf.get_e_qval_sym(dict_batch['states'], on_policy)
+            # off_policy_loss, td_targets = TD(env, dict_batch, on_policy, critic)
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
             plotter.updateOffPolicyLoss(off_policy_loss)
             surr_loss += off_policy_loss
@@ -384,6 +387,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             # with critic.sess as sess:
             critic.fit(states, td_targets, logger, plotter, id="CriticLoss")
+            ceval.do_critic_training(dict_batch)
+
             logger.write(display=True)
 
     """record"""

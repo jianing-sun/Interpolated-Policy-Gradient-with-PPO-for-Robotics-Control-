@@ -61,14 +61,13 @@ class ContinuousQFunction:
         return self._get_e_qval_sym(obs_var, policy, **kwargs)[0]
 
     def _get_e_qval_sym(self, obs_var, policy, **kwargs):
-        agent_info = policy.dist_info_sym(obs_var)
-        mean_var, log_std_var = agent_info['mean'], agent_info['log_std']
+        [mean_var, log_std_var] = policy.getMeanAndLogVar(obs_var)
+        # mean_var, log_std_var = agent_info['mean'], agent_info['log_std']
         return self.get_qval_sym(obs_var, mean_var, **kwargs), mean_var
 
     def get_e_qval(self, observations, policy):
-
-        agent_info = policy.dist_info(observations)
-        means, log_stds = agent_info['mean'], agent_info['log_std']
+        [means, log_stds] = policy.getMeanAndLogVar(observations)
+        # means, log_stds = agent_info['mean'], agent_info['log_std']
         if self.eqf_use_full_qf and self.eqf_sample_size > 1:
             observations = np.repeat(observations, self.eqf_sample_size, axis=0)
             means = np.repeat(means, self.eqf_sample_size, axis=0)
