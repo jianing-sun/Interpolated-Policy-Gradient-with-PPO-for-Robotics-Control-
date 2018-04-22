@@ -255,9 +255,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     # initialize three neural network, on for the ppo policy, one for the value function baseline used to compute
     # advantages, and one is critic
     baseline = ValueFncNN(obs_dim, name='baseline')
-    # critic = ValueFncNN(obs_dim, name='critic')
-    extra_kwargs = dict()
-    qf = ContinuousQFunction(obs_dim, act_dim, **extra_kwargs)
+    critic = ValueFncNN(obs_dim, name='critic')
+    qf = ContinuousQFunction(obs_dim, act_dim)
     on_policy = OnPolicyPPO(obs_dim, act_dim, kl_targ)
     ceval = CriticEval.init_critic(qf, on_policy)
     ceval.init_opt_critic(obs_dim, act_dim)
