@@ -1,6 +1,7 @@
-import tensorflow as tf
-import IPG_for_PPO.Critic.layers as L
 import numpy as np
+import tensorflow as tf
+
+import IPG_for_PPO.Critic.layers as L
 from IPG_for_PPO.Critic.CriticEval import CriticEval
 
 
@@ -8,6 +9,7 @@ def compile_function(inputs, outputs):
     def run(*input_vals):
         sess = tf.get_default_session()
         return sess.run(outputs, feed_dict=dict(list(zip(inputs, input_vals))))
+
     return run
 
 
@@ -76,7 +78,7 @@ class ContinuousQFunction:
             randoms = np.random.randn(*(means))
             actions = means + stds * randoms
             all_qvals = self.get_qval(observations, actions)
-            qvals = np.mean(all_qvals.reshape((-1,self.eqf_sample_size)),axis=1)
+            qvals = np.mean(all_qvals.reshape((-1, self.eqf_sample_size)), axis=1)
         else:
             qvals = self.get_qval(observations, means)
 
@@ -103,23 +105,3 @@ class ContinuousQFunction:
         for i in range(qf_itrs):
             # TODO
             CriticEval.do_critic_training(itr, samples)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import functools
-import numpy as np
 import math
-import tensorflow as tf
-from tensorflow.python.training import moving_averages
 from collections import OrderedDict
 from collections import deque
-from itertools import chain
-from inspect import getargspec
 from difflib import get_close_matches
+from inspect import getargspec
+from itertools import chain
 from warnings import warn
+
+import numpy as np
+import tensorflow as tf
+from tensorflow.python.training import moving_averages
 
 
 class G(object):
@@ -291,9 +292,11 @@ class ConcatLayer(MergeLayer):
 
 concat = ConcatLayer  # shortcut
 
+
 class ZerosInitializer(object):
     def __call__(self, *args, **kwargs):
         return tf.zeros_initializer()(*args, **kwargs)
+
 
 class XavierUniformInitializer(object):
     def __call__(self, shape, dtype=tf.float32, *args, **kwargs):
@@ -305,6 +308,7 @@ class XavierUniformInitializer(object):
             n_outputs = shape[-1] * receptive_field_size
         init_range = math.sqrt(6.0 / (n_inputs + n_outputs))
         return tf.random_uniform_initializer(-init_range, init_range, dtype=dtype)(shape)
+
 
 class HeUniformInitializer(object):
     def __call__(self, shape, dtype=tf.float32, *args, **kwargs):
@@ -618,7 +622,7 @@ class SpatialExpectedSoftmaxLayer(Layer):
         return (input_shape[0], input_shape[-1] * 2)
 
     def get_output_for(self, input, **kwargs):
-        return spatial_expected_softmax(input)#, self.temp)
+        return spatial_expected_softmax(input)  # , self.temp)
         # max_ = tf.reduce_max(input, reduction_indices=[1, 2], keep_dims=True)
         # exp = tf.exp(input - max_) + 1e-5
 

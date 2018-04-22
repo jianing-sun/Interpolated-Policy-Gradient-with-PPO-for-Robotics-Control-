@@ -1,4 +1,5 @@
 import tensorflow as tf
+
 from IPG_for_PPO.Critic.QFunction import compile_function
 
 
@@ -6,18 +7,19 @@ class CriticEval:
     """
     Base class defining methods for policy evaluation.
     """
+
     def init_critic(self,
-            min_pool_size=10000,
-            replay_pool_size=1000000,
-            replacement_prob=1.0,
-            qf_batch_size=32,
-            qf_weight_decay=0.,
-            qf_update_method=tf.train.AdamOptimizer(1e-3),
-            qf_use_target=True,
-            qf_mc_ratio = 0,
-            qf_residual_phi = 0,
-            soft_target_tau=0.001,
-            **kwargs):
+                    min_pool_size=10000,
+                    replay_pool_size=1000000,
+                    replacement_prob=1.0,
+                    qf_batch_size=32,
+                    qf_weight_decay=0.,
+                    qf_update_method=tf.train.AdamOptimizer(1e-3),
+                    qf_use_target=True,
+                    qf_mc_ratio=0,
+                    qf_residual_phi=0,
+                    soft_target_tau=0.001,
+                    **kwargs):
         self.soft_target_tau = soft_target_tau
         self.min_pool_size = min_pool_size
         self.replay_pool_size = replay_pool_size
@@ -75,8 +77,8 @@ class CriticEval:
             discount = tf.placeholder(dtype=tf.float32, shape=(), name='discount')
             qf_loss *= (1. - self.qf_residual_phi)
             next_qval = self.qf.get_e_qval_sym(next_obs, self.policy)
-            residual_ys = rvar + (1.-terminals)*discount*next_qval
-            qf_residual_loss = tf.reduce_mean(tf.square(residual_ys-qval))
+            residual_ys = rvar + (1. - terminals) * discount * next_qval
+            qf_residual_loss = tf.reduce_mean(tf.square(residual_ys - qval))
             qf_loss += self.qf_residual_phi * qf_residual_loss
             qf_input_list += [next_obs, rvar, terminals, discount]
             qf_output_list += [qf_residual_loss, residual_ys]
@@ -94,7 +96,7 @@ class CriticEval:
             mc_yvar = tf.placeholder(dtype=tf.float32, shape=[None], name='mc_ys')
             mc_qval = self.qf.get_qval_sym(mc_obs, mc_action)
             qf_mc_loss = tf.reduce_mean(tf.square(mc_yvar - mc_qval))
-            qf_loss = (1.-self.qf_mc_ratio)*qf_loss + self.qf_mc_ratio*qf_mc_loss
+            qf_loss = (1. - self.qf_mc_ratio) * qf_loss + self.qf_mc_ratio * qf_mc_loss
             qf_input_list += [mc_yvar, mc_obs, mc_action]
 
         qf_reg_loss = qf_loss + qf_weight_decay_term
