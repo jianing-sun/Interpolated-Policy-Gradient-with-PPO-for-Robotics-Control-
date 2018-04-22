@@ -1,34 +1,37 @@
+import numpy as np
 import tensorflow as tf
 
 from IPG_for_PPO.Critic.QFunction import compile_function
-
+from rllab.optimizers.first_order_optimizer import FirstOrderOptimizer
 
 class CriticEval:
-    """
-    Base class defining methods for policy evaluation.
-    """
-
     def init_critic(self,
+                    qf,
+                    policy,
                     min_pool_size=10000,
                     replay_pool_size=1000000,
                     replacement_prob=1.0,
                     qf_batch_size=32,
                     qf_weight_decay=0.,
-                    qf_update_method=tf.train.AdamOptimizer(1e-3),
+                    qf_update_method='adam',
+                    qf_learning_rate = 1e-3,
                     qf_use_target=True,
                     qf_mc_ratio=0,
                     qf_residual_phi=0,
                     soft_target_tau=0.001,
-                    **kwargs):
+                    ):
         self.soft_target_tau = soft_target_tau
         self.min_pool_size = min_pool_size
         self.replay_pool_size = replay_pool_size
         self.replacement_prob = replacement_prob
         self.qf_batch_size = qf_batch_size
         self.qf_weight_decay = qf_weight_decay
-        self.qf_update_method = qf_update_method
+        self.qf_update_method = FirstOrderOptimizer(update_method=qf_update_method,
+                                                    learning_rate=qf_learning_rate)
         self.qf_use_target = qf_use_target
         self.discount = 0.99
+        self.qf = qf
+        self.policy = policy
 
         self.qf_mc_ratio = qf_mc_ratio
         if self.qf_mc_ratio > 0:
@@ -43,17 +46,12 @@ class CriticEval:
         self.q_averages = []
         self.y_averages = []
 
-    def init_opt_critic(self):
+    def init_opt_critic(self, obs_dim, act_dim):
         target_qf = self.qf
+        extra_dims = 1
+        obs = tf.placeholder(tf.float32, shape=[None] * extra_dims + obs_dim, name='qf_obs')
+        action = tf.placeholder(tf.float32, shape=[None] * extra_dims + act_dim, name='qf_action')
 
-        obs = self.qf.env_spec.observation_space.new_tensor_variable(
-            'qf_obs',
-            extra_dims=1,
-        )
-        action = self.qf.env_spec.action_space.new_tensor_variable(
-            'qf_action',
-            extra_dims=1,
-        )
         yvar = tf.placeholder(dtype=tf.float32, shape=[None], name='ys')
 
         qf_weight_decay_term = 0.5 * self.qf_weight_decay * \
@@ -68,10 +66,7 @@ class CriticEval:
 
         # set up residual gradient method
         if self.qf_residual_phi > 0:
-            next_obs = self.qf.env_spec.observation_space.new_tensor_variable(
-                'qf_next_obs',
-                extra_dims=1,
-            )
+            next_obs = tf.placeholder(tf.float32, shape=[None] * extra_dims + obs_dim, name='qf_next_obs')
             rvar = tf.placeholder(dtype=tf.float32, shape=[None], name='rs')
             terminals = tf.placeholder(dtype=tf.float32, shape=[None], name='terminals')
             discount = tf.placeholder(dtype=tf.float32, shape=(), name='discount')
@@ -84,21 +79,6 @@ class CriticEval:
             qf_output_list += [qf_residual_loss, residual_ys]
 
         # set up monte carlo Q fitting method
-        if self.qf_mc_ratio > 0:
-            mc_obs = self.qf.env_spec.observation_space.new_tensor_variable(
-                'qf_mc_obs',
-                extra_dims=1,
-            )
-            mc_action = self.qf.env_spec.action_space.new_tensor_variable(
-                'qf_mc_action',
-                extra_dims=1,
-            )
-            mc_yvar = tf.placeholder(dtype=tf.float32, shape=[None], name='mc_ys')
-            mc_qval = self.qf.get_qval_sym(mc_obs, mc_action)
-            qf_mc_loss = tf.reduce_mean(tf.square(mc_yvar - mc_qval))
-            qf_loss = (1. - self.qf_mc_ratio) * qf_loss + self.qf_mc_ratio * qf_mc_loss
-            qf_input_list += [mc_yvar, mc_obs, mc_action]
-
         qf_reg_loss = qf_loss + qf_weight_decay_term
         self.qf_update_method.update_opt(
             loss=qf_reg_loss, target=self.qf, inputs=qf_input_list)
@@ -111,7 +91,7 @@ class CriticEval:
             target_qf=target_qf,
         )
 
-    def do_critic_training(self, itr, batch, policy):
+    def do_critic_training(self, batch):
 
         obs, actions, rewards, next_obs, terminals = ext.extract(
             batch,
@@ -121,7 +101,7 @@ class CriticEval:
 
         target_qf = self.opt_info_critic["target_qf"]
 
-        target_policy = policy
+        target_policy = self.policy
         next_qvals = target_qf.get_e_qval(next_obs, target_policy)
 
         ys = rewards + (1. - terminals) * self.discount * next_qvals
@@ -144,3 +124,16 @@ class CriticEval:
         self.qf_loss_averages.append(qf_loss)
         self.q_averages.append(qval)
         self.y_averages.append(ys)
+
+    def optimize_critic(self, samples, batch_size):
+        """ Train the critic for batch sampling-based policy optimization methods
+        :param samples:
+        :param batch_size:
+        :param policy:
+        :return:
+        """
+        qf_updates_ratio = 1
+        qf_itrs = float(batch_size) * qf_updates_ratio
+        qf_itrs = int(np.ceil(qf_itrs))
+        for i in range(qf_itrs):
+            self.do_critic_training(samples)

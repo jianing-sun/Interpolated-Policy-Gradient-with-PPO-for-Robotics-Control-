@@ -2,7 +2,6 @@ import numpy as np
 import tensorflow as tf
 
 import IPG_for_PPO.Critic.layers as L
-from IPG_for_PPO.Critic.CriticEval import CriticEval
 
 
 def compile_function(inputs, outputs):
@@ -14,8 +13,7 @@ def compile_function(inputs, outputs):
 
 
 class ContinuousQFunction:
-    def __init__(self, env):
-        self.env = env
+    def __init__(self, obs_dim, act_dim):
         self.name = 'qnet'
         self.hidden_sizes = (32, 32)
         self.action_merge_layer = -1
@@ -27,8 +25,8 @@ class ContinuousQFunction:
         self.discount = 0.99
 
         with tf.variable_scope(self.name):
-            l_obs = L.InputLayer(shape=(None, env.obs_dim), name="obs")
-            l_action = L.InputLayer(shape=(None, env.act_dim), name="actions")
+            l_obs = L.InputLayer(shape=(None, obs_dim), name="obs")
+            l_action = L.InputLayer(shape=(None, act_dim), name="actions")
             n_layers = len(self.hidden_sizes) + 1
             if n_layers > 1:
                 self.action_merge_layer = \
@@ -91,17 +89,3 @@ class ContinuousQFunction:
             **kwargs
         )
         return tf.reshape(qvals, (-1,))
-
-    def optimize_critic(self, samples, batch_size):
-        """ Train the critic for batch sampling-based policy optimization methods
-        :param itr: self.n_itr
-        :param pool:
-        :param samples_data:
-        :return:
-        """
-        qf_updates_ratio = 1
-        qf_itrs = float(batch_size) * qf_updates_ratio
-        qf_itrs = int(np.ceil(qf_itrs))
-        for i in range(qf_itrs):
-            # TODO
-            CriticEval.do_critic_training(itr, samples)
