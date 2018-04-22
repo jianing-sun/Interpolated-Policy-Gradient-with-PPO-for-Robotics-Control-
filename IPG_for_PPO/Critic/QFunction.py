@@ -8,10 +8,11 @@ from rllab.core.serializable import Serializable
 import IPG_for_PPO.Critic.layers as L
 
 
-def compile_function(inputs, outputs):
+def compile_function(inputs, outputs, sess):
     def run(*input_vals):
         # sess = tf.get_default_session()
-        sess = tf.get_default_session()
+        # sess = tf.Session()
+        # sess.__enter__()
         return sess.run(outputs, feed_dict=dict(list(zip(inputs, input_vals))))
     return run
 
@@ -60,12 +61,13 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             eqf_use_full_qf=False,
             eqf_sample_size=1,
             bn=False):
-        Serializable.quick_init(self, locals())
+
         self.n_itr = 500
         self.discount = 0.99
         Serializable.quick_init(self, locals())
 
         with tf.variable_scope(name):
+            sess = tf.Session()
             l_obs = L.InputLayer(shape=(None, obs_dim), name="obs")
             l_action = L.InputLayer(shape=(None, act_dim), name="actions")
 
@@ -82,6 +84,7 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             for idx, size in enumerate(hidden_sizes):
                 if bn:
                     l_hidden = L.batch_norm(l_hidden)
+
                 if idx == action_merge_layer:
                     l_hidden = L.ConcatLayer([l_hidden, l_action])
 
@@ -105,7 +108,7 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             output_var = L.get_output(l_output, deterministic=True)
             output_var = tf.reshape(output_var, (-1,))
 
-            self._f_qval = compile_function([l_obs.input_var, l_action.input_var], output_var)
+            self._f_qval = compile_function([l_obs.input_var, l_action.input_var], output_var, sess)
             self._output_layer = l_output
             self._obs_layer = l_obs
             self._action_layer = l_action
@@ -118,7 +121,7 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
 
     def get_qval(self, observations, actions):
         sess = tf.get_default_session()
-        return self._f_qval(observations, actions, sess)
+        return self._f_qval([observations, actions])
 
     def get_e_qval_sym(self, obs_var, policy, **kwargs):
         return self._get_e_qval_sym(obs_var, policy, **kwargs)[0]

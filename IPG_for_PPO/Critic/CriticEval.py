@@ -60,7 +60,7 @@ class CriticEval:
             loss=qf_reg_loss, target=self.qf, inputs=qf_input_list)
         # qf_output_list += [self.qf_update_method._train_op]
 
-        f_train_qf = compile_function(inputs=qf_input_list, outputs=qf_output_list)
+        f_train_qf = compile_function(inputs=qf_input_list, outputs=qf_output_list, sess=tf.get_default_session())
 
         self.opt_info_critic = dict(
             f_train_qf=f_train_qf,
