@@ -37,6 +37,7 @@ class CriticEval:
         self.y_averages = []
 
     def init_opt_critic(self, obs_dim, act_dim):
+
         target_qf = self.qf
         extra_dims = 1
         obs = tf.placeholder(tf.float32, shape=[None] * extra_dims + list([obs_dim]), name='qf_obs')

@@ -7,12 +7,13 @@ import numpy as np
 import scipy.signal
 import tensorflow as tf
 
+from IPG_for_PPO.Critic.CriticEval import CriticEval
+from IPG_for_PPO.Critic.QFunction import ContinuousQFunction
 from IPG_for_PPO.PPO import OnPolicyPPO
 from IPG_for_PPO.nn_value_function import ValueFncNN
 from IPG_for_PPO.replay_buffer import Buffer
 from IPG_for_PPO.utils import Scaler, Logger, Plotter
-from IPG_for_PPO.Critic.QFunction import ContinuousQFunction
-from IPG_for_PPO.Critic.CriticEval import CriticEval
+
 
 # TODO: integrate this method within the replay buffer class
 def BatchSample(current_buffer, size):
@@ -20,7 +21,6 @@ def BatchSample(current_buffer, size):
 
 
 def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
-
     """ Run policy and collect data for a minimum of min_steps and min_episodes
     Everytime we call this method will trigger 50 episodes training, and will get 50 trajectories in total. Every
     trajectory is a dict with observes, actions, rewards, and unsclaed_obs. append these 50 trajectory lead to a big
@@ -28,8 +28,8 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
 
     :returns
     trajectories, for on-policy training
-    episode_experiences, this is the same with trajectories but with a different type and shape used to fit the requirement
-    of the batch data saved into the big replay buffer.
+    episode_experiences, this is the same with trajectories but with a different type and shape used to fit the
+    requirement of the batch data saved into the big replay buffer.
     """
 
     total_steps = 0
@@ -60,7 +60,6 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
 
 
 def run_episode(env, policy, scaler, animate=False):
-
     """ Run single episode with option to animate.
     This method is triggered inside run_policy, this will form a trajectory with 50 timesteps for each. Every time we
     will sample an action based on the PPO algorithm policy distribution, we will take that action and get corresponding
@@ -87,16 +86,18 @@ def run_episode(env, policy, scaler, animate=False):
         unscaled_obs.append(obs)
         obs = (obs - offset) * scale  # center and scale observations
         temp_obs = obs
-        observes.append(obs)        # center and scale observations
+        observes.append(obs)  # center and scale observations
         action = policy.sample(obs).reshape((1, -1)).astype(np.float64)
         actions.append(action)
         obs, reward, done, info = env.step(action)
+        obs = np.append(obs, [[(temp_obs[0][-1] + 0.001)]])
         if not isinstance(reward, float):
             reward = np.asscalar(reward)
         rewards.append(reward)
         step += 1e-3  # increment time step feature
         # current_buffer.append((temp_obs, action, reward))
         current_buffer.append((temp_obs, action, reward, obs, info))  # add next_observations and info (terminals)
+        obs = obs[:-1]
 
     success_rate = rewards.count(-0.0) / len(rewards)
     return (np.concatenate(observes), np.concatenate(actions),
@@ -104,7 +105,6 @@ def run_episode(env, policy, scaler, animate=False):
 
 
 def compute_vvalue(trajectories, val_func):
-
     """evaluate the values for all the trajectories in current big episode.
     The size of the values should be the batch_size (20) * total timesteps for each episode (50)
     Calculate the values by using the ValueFncNN class, and save them into the trajectory dict
@@ -117,7 +117,6 @@ def compute_vvalue(trajectories, val_func):
 
 
 def critic_compute_vvalue(dict_states, val_func):
-
     """the critic neural network is the same structure of the value function neural network used to compute the advantages,
     but they are TWO neural networks with different shape of input, so for interpolated policy gradient, here I used
     this critic nn to compute the off-policy TD target based on random samples from the replay buffer.
@@ -129,14 +128,12 @@ def critic_compute_vvalue(dict_states, val_func):
 
 
 def discount(x, gamma):
-
     """ Calculate discounted forward sum of a sequence at each point """
 
     return scipy.signal.lfilter([1.0], [1.0, -gamma], x[::-1])[::-1]
 
 
 def compute_advantages(trajectories, gamma, lam):
-
     """ This is used to calculate advantage functions for all the trajectories based on the baseline neural network not
     the critic nn. This is actually Monte Carlo advantages as we use complete whole trajectory.
     """
@@ -155,7 +152,6 @@ def compute_advantages(trajectories, gamma, lam):
 
 
 def add_disc_sum_rew(trajectories, gamma):
-
     """ This is used to calculate the expected true value of the target for the updating. Target is Gt, the error here
     is the MC error: Gt - Vt
     """
@@ -170,7 +166,6 @@ def add_disc_sum_rew(trajectories, gamma):
 
 
 def build_train_set(trajectories):
-
     """Connect all the trainings into a big set.
     :returns
     We need all the observations, actions, advantages to feed into main ppo policy neural network.
@@ -193,7 +188,6 @@ def build_train_set(trajectories):
 
 
 def TD(env, dict_states, policy, critic, gamma=0.995):
-
     """Compute one step temporal difference error.
     Formula: Rt+1 + gamma * Vt+1 - Vt
     :param dict_states: dict_states save the observations from samples (D=S1:m)
@@ -208,9 +202,9 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
     for state in states:
         # action = policy.sample(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
         action = policy.getMean(np.array(state)
-                                .reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
+                                .reshape(1, env.observation_space.shape[0] + 1)).reshape((1, -1)).astype(np.float64)
         state_, reward, done, _ = env.step(action)
-        state_ = np.append(state_, [state[-1]+0.001])      # TODO: what if the timestep is the final step in an episode?
+        state_ = np.append(state_, [state[-1] + 0.001])  # TODO: what if the timestep is the final step in an episode?
         states_.append(state_)
         rewards_.append(reward)
     # compute one-step forward values_
@@ -223,7 +217,6 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
 
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
-
     """ main function for the overall process of interpolated policy gradient (off-line update)
     :param num_episodes: total episodes numbers
     :param batch_size: in every big episode, after batch_size times episodes, we update the policy and neural networks
@@ -246,7 +239,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime(
         "%b-%d_%H:%M:%S")  # create dictionaries based on ETS time
     logger = Logger(logname=env_name, now=now)
-    plotter = Plotter(plotname=env_name+"-Fig", now=now)
+    plotter = Plotter(plotname=env_name + "-Fig", now=now)
 
     # add 1 to obs dimension for time step feature (see run_episode())
     obs_dim += 1
@@ -288,14 +281,10 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             for i in range(0, batch_size):
                 for j in range(0, time_steps):
                     state, actions, reward, states_, terminals = episode_experiences[i][j]
+                    terminals = terminals['is_success']
                     # TODO: add next_obs and terminals (1, 5)
                     buff.add(np.reshape([state, actions, reward, states_, terminals], [1, 5]))  # add to replay buffer
                     current_buffer.append(np.reshape([state, actions, reward], [1, 3]))
-
-            # current i don't use the control variate, so no need to compute Q value here
-            # """fit Qw through off-policy (use replay buffer)"""
-            # off_trajectories = buff.sample(batch_size*time_steps)  # numpy array
-            # q_values = compute_q_value(off_trajectories, off_policy, gamma)
 
             """fit baseline V() through on-policy (use current trajectories)"""
             compute_vvalue(trajectories, baseline)
@@ -328,7 +317,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
                 samples = buff.sample(samples_size)
 
             """compute loss function"""
-            states, actions, rewards = [np.squeeze(elem, axis=1) for elem in np.split(samples, 3, 1)]
+            states, actions, rewards, states_, terminals = [np.squeeze(elem, axis=1) for elem in np.split(samples, 5, 1)]
             states = np.array([s for s in states])
             states = np.squeeze(states)
 
@@ -369,18 +358,20 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             # compute (td target - current values) as delta Qw(Sm) under PPO policy
             b = interpolate_ratio
             # compute Rt+1 + gamma * Q(St+1, At+1)
-            off_policy_loss = qf.get_e_qval_sym(dict_batch['states'], on_policy)
+            off_policy_loss = qf.get_e_qval(dict_batch['states'], on_policy)
             # off_policy_loss, td_targets = TD(env, dict_batch, on_policy, critic)
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
             plotter.updateOffPolicyLoss(off_policy_loss)
             surr_loss += off_policy_loss
 
-            print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, surr_loss))
+            print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss,
+                                                                                   surr_loss))
             print("")
 
             """update current policy based on current observes, actions, advantages"""
             on_feed_dict[on_policy.loss] = tf.reduce_sum(surr_loss)
-            on_policy.update(surr_loss, observes, on_actions, advantages, old_means_np, old_log_vars_np, logger, plotter)
+            on_policy.update(surr_loss, observes, on_actions, advantages, old_means_np, old_log_vars_np, logger,
+                             plotter)
 
             """update baseline and critic"""
             # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)

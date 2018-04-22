@@ -18,4 +18,4 @@ class Buffer:
             experience_buffer = self.buffer
         else:
             experience_buffer = self.buffer * size
-        return np.copy(np.reshape(np.array(random.sample(experience_buffer, size)), [size, 3]))
+        return np.copy(np.reshape(np.array(random.sample(experience_buffer, size)), [size, 5]))

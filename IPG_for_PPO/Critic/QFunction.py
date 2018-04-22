@@ -54,7 +54,7 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             obs_dim,
             act_dim,
             name='qnet',
-            hidden_sizes=(32, 32),
+            hidden_sizes=(64, 64),
             hidden_nonlinearity=tf.nn.relu,
             action_merge_layer=-2,
             eqf_use_full_qf=False,
@@ -130,27 +130,26 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
         return self._get_e_qval_sym(obs_var, policy, **kwargs)[0]
 
     def _get_e_qval_sym(self, obs_var, policy, **kwargs):
-        [mean_var, log_std_var] = policy.getMeanAndLogVar(obs_var)
-        # mean_var, log_std_var = agent_info['mean'], agent_info['log_std']
-        return self.get_qval_sym(obs_var, mean_var, **kwargs), mean_var
+        mean_vars = []
+        for each_obs_var in obs_var:
+            mean_var = policy.getMean(np.array(each_obs_var).reshape(1, 14)).reshape((1, -1)).astype(np.float64)
+            mean_vars.append(mean_var)
+        return self.get_qval_sym(obs_var, mean_vars, **kwargs), mean_vars
 
     def get_e_qval(self, observations, policy):
-        [means, log_stds] = policy.getMeanAndLogVar(observations)
-        # means, log_stds = agent_info['mean'], agent_info['log_std']
-        if self.eqf_use_full_qf and self.eqf_sample_size > 1:
-            observations = np.repeat(observations, self.eqf_sample_size, axis=0)
-            means = np.repeat(means, self.eqf_sample_size, axis=0)
-            stds = np.repeat(np.exp(log_stds), self.eqf_sample_size, axis=0)
-            randoms = np.random.randn(*(means))
-            actions = means + stds * randoms
-            all_qvals = self.get_qval(observations, actions)
-            qvals = np.mean(all_qvals.reshape((-1, self.eqf_sample_size)), axis=1)
-        else:
-            qvals = self.get_qval(observations, means)
+        means = []
+        for observation in observations:
+            mean = policy.getMean(np.array(observation).reshape(1, 14)).reshape((1, -1)).astype(np.float64)
+            means.append(mean)
+        qvals = self.get_qval(observations, means)
 
         return qvals
 
     def get_qval_sym(self, obs_var, action_var, **kwargs):
+        if type(obs_var) != tf.Tensor:
+            obs_var = tf.convert_to_tensor(np.array(obs_var).reshape(14, 64))
+        if type(action_var) != tf.Tensor:
+            action_var = tf.convert_to_tensor(np.array(action_var))
         qvals = L.get_output(
             self._output_layer,
             {self._obs_layer: obs_var, self._action_layer: action_var},
