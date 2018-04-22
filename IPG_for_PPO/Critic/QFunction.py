@@ -10,9 +10,9 @@ import IPG_for_PPO.Critic.layers as L
 
 def compile_function(inputs, outputs):
     def run(*input_vals):
+        # sess = tf.get_default_session()
         sess = tf.get_default_session()
         return sess.run(outputs, feed_dict=dict(list(zip(inputs, input_vals))))
-
     return run
 
 
@@ -61,13 +61,6 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             eqf_sample_size=1,
             bn=False):
         Serializable.quick_init(self, locals())
-        # self.name = 'qnet'
-        # self.hidden_sizes = (32, 32)
-        # self.action_merge_layer = -1
-        # self.hidden_nonlinearity = tf.nn.relu
-        self.batch_norm = False
-        self.eqf_use_full_qf = False
-        # self.eqf_sample_size = 1
         self.n_itr = 500
         self.discount = 0.99
         Serializable.quick_init(self, locals())
@@ -124,7 +117,8 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             LayersPowered.__init__(self, [l_output])
 
     def get_qval(self, observations, actions):
-        return self._f_qval(observations, actions)
+        sess = tf.get_default_session()
+        return self._f_qval(observations, actions, sess)
 
     def get_e_qval_sym(self, obs_var, policy, **kwargs):
         return self._get_e_qval_sym(obs_var, policy, **kwargs)[0]
