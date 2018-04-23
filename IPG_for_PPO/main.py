@@ -358,6 +358,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             # compute (td target - current values) as delta Qw(Sm) under PPO policy
             b = interpolate_ratio
             # compute Rt+1 + gamma * Q(St+1, At+1)
+
             off_policy_loss = qf.get_e_qval(dict_batch['states'], on_policy)
             # off_policy_loss, td_targets = TD(env, dict_batch, on_policy, critic)
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)

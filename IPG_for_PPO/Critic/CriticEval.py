@@ -19,6 +19,7 @@ class CriticEval:
                  qf_use_target=True,
                  soft_target_tau=0.001,
                  ):
+
         self.soft_target_tau = soft_target_tau
         self.min_pool_size = min_pool_size
         self.replay_pool_size = replay_pool_size
@@ -40,14 +41,18 @@ class CriticEval:
 
         target_qf = self.qf
         extra_dims = 1
+
         obs = tf.placeholder(tf.float32, shape=[None] * extra_dims + list([obs_dim]), name='qf_obs')
         action = tf.placeholder(tf.float32, shape=[None] * extra_dims + list([act_dim]), name='qf_action')
 
+        # obs = tf.placeholder(tf.float32, shape=list([obs_dim] + [None] * extra_dims), name='qf_obs')
+        # action = tf.placeholder(tf.float32, shape=list([act_dim] + [None] * extra_dims), name='qf_action')
+
         yvar = tf.placeholder(dtype=tf.float32, shape=[None], name='ys')
 
-        qf_weight_decay_term = 0.5 * self.qf_weight_decay * \
-                               sum([tf.reduce_sum(tf.square(param)) for param in
-                                    self.qf.get_params(regularizable=True)])
+        # qf_weight_decay_term = 0.5 * self.qf_weight_decay * \
+        #                        sum([tf.reduce_sum(tf.square(param)) for param in
+        #                             self.qf.get_params(regularizable=True)])
 
         qval = self.qf.get_qval_sym(obs, action)
 
@@ -55,7 +60,9 @@ class CriticEval:
         qf_input_list = [yvar, obs, action]
         qf_output_list = [qf_loss, qval]
 
-        qf_reg_loss = qf_loss + qf_weight_decay_term
+        # qf_reg_loss = qf_loss + qf_weight_decay_term
+        qf_reg_loss = qf_loss
+
         self.qf_update_method.update_opt(
             loss=qf_reg_loss, target=self.qf, inputs=qf_input_list)
         # qf_output_list += [self.qf_update_method._train_op]

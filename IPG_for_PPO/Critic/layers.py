@@ -391,6 +391,7 @@ class DenseLayer(Layer):
         num_inputs = int(np.prod(self.input_shape[1:]))
 
         self.W = self.add_param(W, (num_inputs, num_units), name="W")
+        # self.W = self.add_param(W, (num_units, num_inputs), name="W")
         if b is None:
             self.b = None
         else:

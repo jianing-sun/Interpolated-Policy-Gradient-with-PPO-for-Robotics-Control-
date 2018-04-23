@@ -120,8 +120,9 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
             LayersPowered.__init__(self, [l_output])
 
     def get_qval(self, observations, actions):
-        sess = tf.get_default_session()
-        return self._f_qval([observations, actions])
+        # sess = tf.get_default_session()
+        actions = np.squeeze(actions)
+        return self._f_qval(observations, actions)
 
     def get_e_qval_sym(self, obs_var, policy, **kwargs):
         return self._get_e_qval_sym(obs_var, policy, **kwargs)[0]
