@@ -68,6 +68,8 @@ class ContinuousQFunction(QFunction, LayersPowered, Serializable):
 
         with tf.variable_scope(name):
             sess = tf.Session()
+            sess = tf.global_variables_initializer()
+
             l_obs = L.InputLayer(shape=(None, obs_dim), name="obs")
             l_action = L.InputLayer(shape=(None, act_dim), name="actions")
 
