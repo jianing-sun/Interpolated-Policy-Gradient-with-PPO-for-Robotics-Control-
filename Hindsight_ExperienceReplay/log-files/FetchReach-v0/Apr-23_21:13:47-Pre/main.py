@@ -1,16 +1,16 @@
 import argparse
-import random
 import datetime
+import random
 
 import gym
 import numpy as np
 import scipy.signal
 import tensorflow as tf
 
-from IPG_for_PPO.nn_value_function import ValueFncNN
-from IPG_for_PPO.utils import Scaler, Logger, Plotter
-from IPG_for_PPO.PPO import OnPolicyPPO
-from IPG_for_PPO.replay_buffer import Buffer
+from Hindsight_ExperienceReplay.nn_value_function import ValueFncNN
+from Hindsight_ExperienceReplay.proximal_policy_optimization import OnPolicyPPO
+from Hindsight_ExperienceReplay.replay_buffer import Buffer
+from Hindsight_ExperienceReplay.utils import Scaler, Logger, Plotter
 
 
 # TODO: integrate this method within the replay buffer class
@@ -19,7 +19,6 @@ def BatchSample(current_buffer, size):
 
 
 def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
-
     """ Run policy and collect data for a minimum of min_steps and min_episodes
     Everytime we call this method will trigger 50 episodes training, and will get 50 trajectories in total. Every
     trajectory is a dict with observes, actions, rewards, and unsclaed_obs. append these 50 trajectory lead to a big
@@ -58,16 +57,18 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
     return trajectories, episode_experiences
 
 
-def run_episode(env, policy, scaler, animate=False):
-
+def  run_episode(env, policy, scaler, animate=False):
     """ Run single episode with option to animate.
-    This method is triggered inside run_policy, this will form a trajectory with 50 timesteps for each. Every time we
-    will sample an action based on the PPO algorithm policy distribution, we will take that action and get corresponding
-    next observes and rewards. observes are appended with the value of time steps (start from 0, every step increase 1e-3).
+    This method is triggered inside run_policy, this will form a trajectory with
+    50 timesteps for each. Every time we will sample an action based on the PPO
+    algorithm policy distribution, we will take that action and get corresponding
+    next observes and rewards. observes are appended with the value of time steps
+    (start from 0, every step increase 1e-3).
 
     :returns
-    concatenate all the observes, sampled actions, rewards, and unscaled_obs after taking 50 sampled actions during the
-    trajectory.  current buffer saves current episode experience, we append 50 current buffer in the run_policy method.
+    concatenate all the observes, sampled actions, rewards, and unscaled_obs after
+    taking 50 sampled actions during the trajectory.  current buffer saves current
+    episode experience, we append 50 current buffer in the run_policy method.
     """
 
     obs = env.reset()
@@ -76,25 +77,28 @@ def run_episode(env, policy, scaler, animate=False):
     done = False
     step = 0.0
     scale, offset = scaler.get()
-    scale[-1] = 1.0  # don't scale time step feature
-    offset[-1] = 0.0  # don't offset time step feature
+    scale[-4] = 1.0  # don't scale time step feature
+    offset[-4] = 0.0  # don't offset time step feature
     while not done:
         if animate:
             env.render()
-        obs = obs.astype(np.float64).reshape((1, -1))
-        obs = np.append(obs, [[step]], axis=1)  # add time step feature
-        unscaled_obs.append(obs)
-        obs = (obs - offset) * scale  # center and scale observations
-        temp_obs = obs
-        observes.append(obs)        # center and scale observations
-        action = policy.sample(obs).reshape((1, -1)).astype(np.float64)
+        _obs = np.hstack((obs['observation'], obs['desired_goal']))
+        _obs = _obs.astype(np.float64).reshape((1, -1))
+        _obs = np.append(_obs, [[step]], axis=1)  # add time step feature
+        _obs = np.append(_obs, obs['achieved_goal'])
+        unscaled_obs.append([_obs])
+        _obs = (_obs - offset) * scale  # center and scale observations
+        _obs = np.split(_obs, [-3], axis=0)
+        temp_obs = _obs
+        observes.append(_obs[0].reshape(1, 14))  # center and scale observations
+        action = policy.sample(_obs[0].reshape(1, 14)).reshape((1, -1)).astype(np.float64)
         actions.append(action)
-        obs, reward, done, _ = env.step(action)
+        obs, reward, done, info = env.step(action)
         if not isinstance(reward, float):
             reward = np.asscalar(reward)
         rewards.append(reward)
         step += 1e-3  # increment time step feature
-        current_buffer.append((temp_obs, action, reward))
+        current_buffer.append((temp_obs, action, reward, info))
 
     success_rate = rewards.count(-0.0) / len(rewards)
     return (np.concatenate(observes), np.concatenate(actions),
@@ -102,24 +106,25 @@ def run_episode(env, policy, scaler, animate=False):
 
 
 def compute_vvalue(trajectories, val_func):
-
     """evaluate the values for all the trajectories in current big episode.
-    The size of the values should be the batch_size (15) * total timesteps for each episode (50)
-    Calculate the values by using the ValueFncNN class, and save that into the trajectory dict
+    The size of the values should be the batch_size (15) * total timesteps
+    for each episode (50) Calculate the values by using the ValueFncNN class,
+    and save that into the trajectory dict
     """
 
-    for on_trajectory in trajectories:  # 15 trajectories, each with 50 time steps
+    for on_trajectory in trajectories:  # 20 trajectories, each with 50 time steps
         observes = on_trajectory['observes']
         values = val_func.predict(observes)
         on_trajectory['values'] = values
 
 
 def critic_compute_vvalue(dict_states, val_func):
-
-    """the critic neural network is the same structure of the value function neural network used to count the advantages,
-    but there are TWO neural networks with different shape of input, so for interpolated policy gradient, here I used
-    this critic nn to compute the off-policy TD target based on random samples from the replay buffer.
-    This is a medium step to compute the TD error. As the input shape is different we can't use the same one to predict.
+    """the critic neural network is the same structure of the value function
+    neural network used to count the advantages, but there are TWO neural
+    networks with different shape of input, so for interpolated policy gradient,
+    here I used this critic nn to compute the off-policy TD target based on random
+    samples from the replay buffer. This is a medium step to compute the TD error.
+    As the input shape is different we can't use the same one to predict.
     """
 
     values = val_func.predict(dict_states['states'])
@@ -127,16 +132,15 @@ def critic_compute_vvalue(dict_states, val_func):
 
 
 def discount(x, gamma):
-
     """ Calculate discounted forward sum of a sequence at each point """
 
     return scipy.signal.lfilter([1.0], [1.0, -gamma], x[::-1])[::-1]
 
 
 def compute_advantages(trajectories, gamma, lam):
-
-    """ This is used to calculate advantage functions for all the trajectories based on the baseline neural network not
-    the critic nn. This is actually Monte Carlo advantages as we use complete whole trajectory.
+    """ This is used to calculate advantage functions for all the trajectories based
+    on the baseline neural network not the critic nn. This is actually Monte Carlo
+    advantages as we use complete whole trajectory.
     """
 
     for trajectory in trajectories:
@@ -153,9 +157,8 @@ def compute_advantages(trajectories, gamma, lam):
 
 
 def add_disc_sum_rew(trajectories, gamma):
-
-    """ This is used to calculate the expected true value of the target for the updating. Target is Gt, the error here
-    is the MC error: Gt - Vt
+    """ This is used to calculate the expected true value of the target for the updating.
+    Target is Gt, the error here is the MC error: Gt - Vt
     """
 
     for trajectory in trajectories:
@@ -168,7 +171,6 @@ def add_disc_sum_rew(trajectories, gamma):
 
 
 def build_train_set(trajectories):
-
     """Connect all the trainings into a big set.
     :returns
     We need all the observations, actions, advantages to feed into main ppo policy neural network.
@@ -191,7 +193,6 @@ def build_train_set(trajectories):
 
 
 def TD(env, dict_states, policy, critic, gamma=0.995):
-
     """Compute one step temporal difference error.
     Formula: Rt+1 + gamma * Vt+1 - Vt
     :param dict_states: dict_states save the observations from samples (D=S1:m)
@@ -204,10 +205,10 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
     states_ = []
     rewards_ = []
     for state in states:
-        # action = policy.sample(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
-        action = policy.getMean(np.array(state).reshape(1, env.observation_space.shape[0]+1)).reshape((1, -1)).astype(np.float64)
+        action = policy.getMean(np.array(state).reshape(1, 14)).reshape((1, -1)).astype(np.float64)
         state_, reward, done, _ = env.step(action)
-        state_ = np.append(state_, [state[-1]+0.001])      # TODO: what if the timestep is the final step in an episode?
+        state_ = np.hstack((state_['observation'], state_['desired_goal']))
+        state_ = np.append(state_, [state[-1] + 0.001])  # TODO: what if the timestep is the final step in an episode?
         states_.append(state_)
         rewards_.append(reward)
     # compute one-step forward values_
@@ -220,7 +221,6 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
 
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
-
     """ main function for the overall process of interpolated policy gradient (off-line update)
     :param num_episodes: total episodes numbers
     :param batch_size: in every big episode, after batch_size times episodes, we update the policy and neural networks
@@ -229,13 +229,17 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     # initialize gym environment and get observations and actions
     env = gym.make(env_name)
     gym.spaces.seed(1234)
-    env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal'])
-    obs_dim = env.observation_space.shape[0]
+    obs = env.reset()
+    # env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal', 'achieved_goal'])
+    obs_dim = obs['observation'].shape[0] + obs['desired_goal'].shape[0] + obs['achieved_goal'].shape[0]
     act_dim = env.action_space.shape[0]
 
     # parameters
     time_steps = 50  # T, time steps in every episode
     userCV = False
+    HER = False
+    replay_k = 4
+    future_p = 1 - (1. / (1 + replay_k))
     interpolate_ratio = 0.2  # set v
     samples_size = 64
 
@@ -243,7 +247,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime(
         "%b-%d_%H:%M:%S")  # create dictionaries based on ETS time
     logger = Logger(logname=env_name, now=now)
-    plotter = Plotter(plotname=env_name+"-Fig", now=now)
+    plotter = Plotter(plotname=env_name + "-Fig", now=now)
 
     # add 1 to obs dimension for time step feature (see run_episode())
     obs_dim += 1
@@ -251,9 +255,9 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
     # initialize three neural network, on for the ppo policy, one for the value function baseline used to compute
     # advantages, and one is critic
-    baseline = ValueFncNN(obs_dim, name='baseline')
-    critic = ValueFncNN(obs_dim, name='critic')
-    on_policy = OnPolicyPPO(obs_dim, act_dim, kl_targ)
+    baseline = ValueFncNN(obs_dim - 3, name='baseline')
+    critic = ValueFncNN(obs_dim - 3, name='critic')
+    on_policy = OnPolicyPPO(obs_dim - 3, act_dim, kl_targ)
 
     # initialize replay buffer
     buff = Buffer(1000000)
@@ -265,7 +269,6 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     # start training
     with on_policy.sess as sess:
         while episode < num_episodes:
-
             """experience replay: there are two buffers, one is replay buffer which 
             keep expanding with new experiences (off-policy); one is current buffer 
             ("play" buffer) which only contains current experience (on-policy)
@@ -280,11 +283,43 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             for i in range(0, batch_size):
                 for j in range(0, time_steps):
-                    state, action, reward = episode_experiences[i][j]
-                    buff.add(np.reshape([state, action, reward], [1, 3]))  # add to replay buffer
-                    current_buffer.append(np.reshape([state, action, reward], [1, 3]))
+                    state, action, reward, info = episode_experiences[i][j]
+                    buff.add(np.reshape([state[0], action, reward], [1, 3]))  # add to replay buffer
+                    current_buffer.append(np.reshape([state[0], action, reward], [1, 3]))
 
-            # current i don't use the control variate, so no need to compute Q value here
+            if HER:
+                # select one timestep in an episode for each trajectory in the batch
+                her_timesteps = time_steps
+                her_batchsize = batch_size
+                t_samples = np.random.randint(her_timesteps, size=her_batchsize)
+
+                # Select future time indexes proportional with probability future_p. These will
+                # be used for HER replay by substituting in future goals.
+                her_indexes = np.where(np.random.uniform(size=batch_size) < future_p)
+                future_offset = np.random.uniform(size=her_batchsize) * (her_timesteps - t_samples)
+                future_offset = future_offset.astype(int)
+                future_ts = (t_samples + future_offset)[her_indexes]
+
+                # Replace goal with achieved goal but only for the previously-selected HER transitions
+                # (as defined by her_indexes). For the other transitions, keep the original goal.
+                her_indexes = np.squeeze(np.array(her_indexes))
+
+                for her_index in range(0, len(her_indexes)):
+                    for future_t in range(0, len(future_ts)):
+                        future_ag = episode_experiences[her_indexes[her_index]][future_ts[future_t]][0][1]
+
+                        for j in range(0, her_timesteps):
+                            state, action, reward, info = episode_experiences[her_index][j]
+                            # Substitute desired_goal with achieved_goal
+                            state[0][-4:-1] = future_ag
+                            # Re-compute reward since we substitute the desired_goal with the achieved_goal
+                            # in some random episodes
+                            new_reward = env.compute_reward(achieved_goal=state[1],
+                                                            desired_goal=future_ag, info=info)
+                            # print("old_reward: {}. new_reward: {}.".format(reward,new_reward))
+                            buff.add(np.reshape([state[0], action, new_reward], [1, 3]))
+
+            # so far i don't use the control variate, so no need to compute Q value here
             # """fit Qw through off-policy (use replay buffer)"""
             # off_trajectories = buff.sample(batch_size*time_steps)  # numpy array
             # q_values = compute_q_value(off_trajectories, off_policy, gamma)
@@ -307,12 +342,6 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             critic-based advantage estimate using current buffer, Q and policy
             if useCV=False, then just center the learning signals lt,e=At,e
             """
-            # if userCV:
-            #     pass
-            # else:
-            #     # center the learning signals = advantages, and set b = v
-            #     learning_signals = advantages
-            #     b = interpolate_ratio
 
             # multiply learning signals by (1-v)
             learning_signals *= (1 - interpolate_ratio)
@@ -350,16 +379,15 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
             # times (1/ET)
             # on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
-            surr_loss = on_policy_loss
 
-            # compute off-policy loss (second term in the IPG algorithm loss function)
+            # compute off-policy loss (second term in the IPO algorithm loss function)
             """
-            consider using temporal difference as the critic, then delta Q = Rt+1 + gamma * Q(St+1, At+1) - Q(St, At)
+            consider using Sarsa as the critic, then delta Q = Rt+1 + gamma * Q(St+1, At+1) - Q(St, At)
             then the loss is the sum over all the batch samples
             """
             # dict_states is a dict for random samples from replay buffer, not for trajectory
             dict_states = {'states': states}
-            # evaluate values (Vt) for samples and add them to   the dict by using the critic neural network
+            # evaluate values (Vt) for samples and add them to the dict by using the critic neural network
             critic_compute_vvalue(dict_states, critic)
             # compute (td target - current values) as delta Qw(Sm) under PPO policy
             b = interpolate_ratio
@@ -367,14 +395,15 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             off_policy_loss, td_targets = TD(env, dict_states, on_policy, critic)
             off_policy_loss = (b / samples_size) * np.sum(off_policy_loss)
             plotter.updateOffPolicyLoss(off_policy_loss)
-            surr_loss += off_policy_loss
+            loss = on_policy_loss + off_policy_loss
 
-            print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, surr_loss))
+            print(
+                "on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, loss))
             print("")
 
             """update current policy based on current observes, actions, advantages"""
-            on_feed_dict[on_policy.loss] = tf.reduce_sum(surr_loss)
-            on_policy.update(surr_loss, observes, on_actions, advantages, old_means_np, old_log_vars_np, logger, plotter)
+            on_feed_dict[on_policy.loss] = tf.reduce_sum(loss)
+            on_policy.update(loss, observes, on_actions, advantages, old_means_np, old_log_vars_np, logger, plotter)
 
             """update baseline and critic"""
             # observes, actions, advantages, disc_sum_rew = build_train_set(trajectories)

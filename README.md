@@ -1,5 +1,7 @@
 - Some Results based on FetchReach-v0 environment between IPG and PPO:
 
+A [slide]() for initial result and comparison among PPO, IPG and HER+IPG based on multi-goal RL environment (FetchReach-v0 from Robotic of Gym).
+
 <img src="https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0412.png" width="500px" />
 
 <img src="https://github.com/jianing-sun/Interpolated-Policy-Gradient-with-PPO-for-Robotics-Control-/blob/master/Results/0414-amend-onpolicy-loss.png" width="500px" />
@@ -64,4 +66,4 @@
 
 Jianing Sun
 
-Last modified: April 22th, 2018
+Last modified: April 23th, 2018

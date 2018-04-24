@@ -51,14 +51,14 @@ class OnPolicyPPO(object):
         # heuristic to set learning rate based on NN size (tuned on 'Hopper-v1')
         self.lr = 9e-4 / np.sqrt(hid2_size)  # 9e-4 empirically determined
         # 3 hidden layers with tanh activations
-        out = tf.layers.dense(self.obs_ph, hid1_size, tf.nn.relu,
+        out = tf.layers.dense(self.obs_ph, hid1_size, tf.tanh,
                               kernel_initializer=tf.random_normal_initializer(
                                   stddev=np.sqrt(1 / self.obs_dim)),
                               name="h1")  # mean=0, standard deviation = np.sqrt(1/self.obs_dim)
-        out = tf.layers.dense(out, hid2_size, tf.nn.relu,
+        out = tf.layers.dense(out, hid2_size, tf.tanh,
                               kernel_initializer=tf.random_normal_initializer(
                                   stddev=np.sqrt(1 / hid1_size)), name="h2")
-        out = tf.layers.dense(out, hid3_size, tf.nn.relu,
+        out = tf.layers.dense(out, hid3_size, tf.tanh,
                               kernel_initializer=tf.random_normal_initializer(
                                   stddev=np.sqrt(1 / hid2_size)), name="h3")
         self.means = tf.layers.dense(out, self.act_dim,
@@ -155,17 +155,10 @@ class OnPolicyPPO(object):
         feed_dict = {self.obs_ph: obs}
         return self.sess.run(self.means, feed_dict=feed_dict)
 
-    def getMeanAndLogVar(self, obs):
-        means = []
-        for ob in obs:
-            feed_dict = {self.obs_ph: ob}
-            mean = self.sess.run(self.means, feed_dict=feed_dict)
-            means.append(mean)
-        return means
-
     def sample(self, obs):
         """Draw sample from policy distribution"""
         feed_dict = {self.obs_ph: obs}
+
         return self.sess.run(self.sampled_act, feed_dict=feed_dict)
 
     def update(self, loss, observes, actions, advantages, old_means_np, old_log_vars_np, logger, plotter):
@@ -197,7 +190,7 @@ class OnPolicyPPO(object):
             if self.beta < (1 / 30) and self.lr_multiplier < 10:
                 self.lr_multiplier *= 1.5
 
-        logger.log({'TotalPolicyLoss': loss_,
+        logger.log({'NewPolicyLoss': loss_,
                     'PolicyEntropy': entropy,
                     'KL': kl,
                     'Beta': self.beta,
@@ -207,8 +200,6 @@ class OnPolicyPPO(object):
         plotter.updateBeta(self.beta)
         plotter.updateTotalLoss(loss_)
         plotter.updateKL(kl)
-
-        # return self.logp
 
     def close_sess(self):
         """ Close TensorFlow session """

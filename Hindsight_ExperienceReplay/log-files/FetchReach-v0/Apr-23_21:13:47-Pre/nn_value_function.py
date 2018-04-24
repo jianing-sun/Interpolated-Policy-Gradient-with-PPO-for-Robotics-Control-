@@ -37,10 +37,10 @@ class ValueFncNN(object):
             print('Value Params -- h1: {}, h2: {}, h3: {}, lr: {:.3g}'
                   .format(hid1_size, hid2_size, hid3_size, self.lr))
             # 3 hidden layers with tanh activations
-            out = tf.layers.dense(self.obs_ph, hid1_size, tf.nn.relu,
+            out = tf.layers.dense(self.obs_ph, hid1_size, tf.tanh,
                                   kernel_initializer=tf.random_normal_initializer(
                                       stddev=np.sqrt(1 / self.obs_dim)), name="h1")
-            out = tf.layers.dense(out, hid2_size, tf.nn.relu,
+            out = tf.layers.dense(out, hid2_size, tf.tanh,
                                   kernel_initializer=tf.random_normal_initializer(
                                       stddev=np.sqrt(1 / hid1_size)), name="h2")
             out = tf.layers.dense(out, hid3_size, tf.tanh,

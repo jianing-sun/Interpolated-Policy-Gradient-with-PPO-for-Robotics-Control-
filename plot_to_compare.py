@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import csv
 import os
 
+#PPO
 basicppo = './Basic_PPO/log-files/FetchReach-v0/Apr-12_22:02:13-Seed1234/log.csv'
 h_episode = '_Episode'
 h_meanReward = '_MeanReward'
@@ -22,8 +23,8 @@ meanReward1 = list(map(float, meanReward1))
 print(episode1)
 print(meanReward1)
 
-
-ipgppo = './IPG_for_PPO/log-files/FetchReach-v0/Apr-14_20:20:32/log.csv'
+# IPG
+ipgppo = './IPG_for_PPO/log-files/FetchReach-v0/Apr-12_23:16-Seed1234/log.csv'
 h_episode = '_Episode'
 h_meanReward = '_MeanReward'
 
@@ -43,13 +44,35 @@ meanReward2 = list(map(float, meanReward2))
 print(episode2)
 print(meanReward2)
 
+#HER
+ipgppo = './Hindsight_ExperienceReplay/log-files/FetchReach-v0/Apr-23_21:13:47-Pre/log.csv'
+h_episode = '_Episode'
+h_meanReward = '_MeanReward'
+
+episode3 = []
+meanReward3 = []
+reader = csv.reader(open(ipgppo, 'rU'), delimiter=',', dialect='excel')
+hrow = next(reader)
+
+idx5 = hrow.index(h_episode)
+idx6 = hrow.index(h_meanReward)
+for row in reader:
+    episode3.append(row[idx5])
+    meanReward3.append(row[idx6])
+
+episode3 = list(map(int, episode3))
+meanReward3 = list(map(float, meanReward3))
+print(episode3)
+print(meanReward3)
+
 plt.plot(episode1, meanReward1, label='PPO')
 plt.plot(episode2, meanReward2, label='IPG')
+plt.plot(episode3, meanReward3, label='HER+IPG')
 plt.xlabel('Mean Reward')
 plt.ylabel('Episodes')
 plt.legend()
 
 
 path = os.path.join('./Results')
-plt.savefig(os.path.join(path, 'Apr-14_20:20:32'))
+plt.savefig(os.path.join(path, 'Apr-12_23:16-Seed1234'))
 

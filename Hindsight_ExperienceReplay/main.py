@@ -1,6 +1,6 @@
 import argparse
-import random
 import datetime
+import random
 
 import gym
 import numpy as np
@@ -8,9 +8,9 @@ import scipy.signal
 import tensorflow as tf
 
 from Hindsight_ExperienceReplay.nn_value_function import ValueFncNN
-from Hindsight_ExperienceReplay.utils import Scaler, Logger, Plotter
 from Hindsight_ExperienceReplay.proximal_policy_optimization import OnPolicyPPO
 from Hindsight_ExperienceReplay.replay_buffer import Buffer
+from Hindsight_ExperienceReplay.utils import Scaler, Logger, Plotter
 
 
 # TODO: integrate this method within the replay buffer class
@@ -19,7 +19,6 @@ def BatchSample(current_buffer, size):
 
 
 def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
-
     """ Run policy and collect data for a minimum of min_steps and min_episodes
     Everytime we call this method will trigger 50 episodes training, and will get 50 trajectories in total. Every
     trajectory is a dict with observes, actions, rewards, and unsclaed_obs. append these 50 trajectory lead to a big
@@ -58,8 +57,7 @@ def run_policy(env, policy, scaler, logger, plotter, episodes, plot=True):
     return trajectories, episode_experiences
 
 
-def run_episode(env, policy, scaler, animate=False):
-
+def  run_episode(env, policy, scaler, animate=False):
     """ Run single episode with option to animate.
     This method is triggered inside run_policy, this will form a trajectory with
     50 timesteps for each. Every time we will sample an action based on the PPO
@@ -86,13 +84,13 @@ def run_episode(env, policy, scaler, animate=False):
             env.render()
         _obs = np.hstack((obs['observation'], obs['desired_goal']))
         _obs = _obs.astype(np.float64).reshape((1, -1))
-        _obs = np.append(_obs, [[step]], axis=1)        # add time step feature
+        _obs = np.append(_obs, [[step]], axis=1)  # add time step feature
         _obs = np.append(_obs, obs['achieved_goal'])
         unscaled_obs.append([_obs])
         _obs = (_obs - offset) * scale  # center and scale observations
         _obs = np.split(_obs, [-3], axis=0)
         temp_obs = _obs
-        observes.append(_obs[0].reshape(1, 14))        # center and scale observations
+        observes.append(_obs[0].reshape(1, 14))  # center and scale observations
         action = policy.sample(_obs[0].reshape(1, 14)).reshape((1, -1)).astype(np.float64)
         actions.append(action)
         obs, reward, done, info = env.step(action)
@@ -108,7 +106,6 @@ def run_episode(env, policy, scaler, animate=False):
 
 
 def compute_vvalue(trajectories, val_func):
-
     """evaluate the values for all the trajectories in current big episode.
     The size of the values should be the batch_size (15) * total timesteps
     for each episode (50) Calculate the values by using the ValueFncNN class,
@@ -122,7 +119,6 @@ def compute_vvalue(trajectories, val_func):
 
 
 def critic_compute_vvalue(dict_states, val_func):
-
     """the critic neural network is the same structure of the value function
     neural network used to count the advantages, but there are TWO neural
     networks with different shape of input, so for interpolated policy gradient,
@@ -136,14 +132,12 @@ def critic_compute_vvalue(dict_states, val_func):
 
 
 def discount(x, gamma):
-
     """ Calculate discounted forward sum of a sequence at each point """
 
     return scipy.signal.lfilter([1.0], [1.0, -gamma], x[::-1])[::-1]
 
 
 def compute_advantages(trajectories, gamma, lam):
-
     """ This is used to calculate advantage functions for all the trajectories based
     on the baseline neural network not the critic nn. This is actually Monte Carlo
     advantages as we use complete whole trajectory.
@@ -163,7 +157,6 @@ def compute_advantages(trajectories, gamma, lam):
 
 
 def add_disc_sum_rew(trajectories, gamma):
-
     """ This is used to calculate the expected true value of the target for the updating.
     Target is Gt, the error here is the MC error: Gt - Vt
     """
@@ -178,7 +171,6 @@ def add_disc_sum_rew(trajectories, gamma):
 
 
 def build_train_set(trajectories):
-
     """Connect all the trainings into a big set.
     :returns
     We need all the observations, actions, advantages to feed into main ppo policy neural network.
@@ -201,7 +193,6 @@ def build_train_set(trajectories):
 
 
 def TD(env, dict_states, policy, critic, gamma=0.995):
-
     """Compute one step temporal difference error.
     Formula: Rt+1 + gamma * Vt+1 - Vt
     :param dict_states: dict_states save the observations from samples (D=S1:m)
@@ -214,10 +205,10 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
     states_ = []
     rewards_ = []
     for state in states:
-        action = policy.sample(np.array(state).reshape(1, 14)).reshape((1, -1)).astype(np.float64)
+        action = policy.getMean(np.array(state).reshape(1, 14)).reshape((1, -1)).astype(np.float64)
         state_, reward, done, _ = env.step(action)
         state_ = np.hstack((state_['observation'], state_['desired_goal']))
-        state_ = np.append(state_, [state[-1]+0.001])   # TODO: what if the timestep is the final step in an episode?
+        state_ = np.append(state_, [state[-1] + 0.001])  # TODO: what if the timestep is the final step in an episode?
         states_.append(state_)
         rewards_.append(reward)
     # compute one-step forward values_
@@ -230,7 +221,6 @@ def TD(env, dict_states, policy, critic, gamma=0.995):
 
 
 def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
-
     """ main function for the overall process of interpolated policy gradient (off-line update)
     :param num_episodes: total episodes numbers
     :param batch_size: in every big episode, after batch_size times episodes, we update the policy and neural networks
@@ -238,15 +228,16 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
     # initialize gym environment and get observations and actions
     env = gym.make(env_name)
+    gym.spaces.seed(1234)
     obs = env.reset()
     # env = gym.wrappers.FlattenDictWrapper(env, ['observation', 'desired_goal', 'achieved_goal'])
-    obs_dim = obs['observation'].shape[0]+obs['desired_goal'].shape[0]+obs['achieved_goal'].shape[0]
+    obs_dim = obs['observation'].shape[0] + obs['desired_goal'].shape[0] + obs['achieved_goal'].shape[0]
     act_dim = env.action_space.shape[0]
 
     # parameters
     time_steps = 50  # T, time steps in every episode
     userCV = False
-    HER = True
+    HER = False
     replay_k = 4
     future_p = 1 - (1. / (1 + replay_k))
     interpolate_ratio = 0.2  # set v
@@ -256,7 +247,7 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
     now = (datetime.datetime.utcnow() - datetime.timedelta(hours=4)).strftime(
         "%b-%d_%H:%M:%S")  # create dictionaries based on ETS time
     logger = Logger(logname=env_name, now=now)
-    plotter = Plotter(plotname=env_name+"-Fig", now=now)
+    plotter = Plotter(plotname=env_name + "-Fig", now=now)
 
     # add 1 to obs dimension for time step feature (see run_episode())
     obs_dim += 1
@@ -264,9 +255,9 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
 
     # initialize three neural network, on for the ppo policy, one for the value function baseline used to compute
     # advantages, and one is critic
-    baseline = ValueFncNN(obs_dim-3, name='baseline')
-    critic = ValueFncNN(obs_dim-3, name='critic')
-    on_policy = OnPolicyPPO(obs_dim-3, act_dim, kl_targ)
+    baseline = ValueFncNN(obs_dim - 3, name='baseline')
+    critic = ValueFncNN(obs_dim - 3, name='critic')
+    on_policy = OnPolicyPPO(obs_dim - 3, act_dim, kl_targ)
 
     # initialize replay buffer
     buff = Buffer(1000000)
@@ -380,11 +371,14 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             old_means_np, old_log_vars_np = sess.run([on_policy.means, on_policy.log_vars], feed_dict=on_feed_dict)
             on_feed_dict[on_policy.old_log_vars_ph] = old_log_vars_np
             on_feed_dict[on_policy.old_means_ph] = old_means_np
+
+            sess.run(on_policy.train_op, on_feed_dict)
+
             # compute loss
             on_policy_loss = sess.run(on_policy.loss, feed_dict=on_feed_dict)
 
             # times (1/ET)
-            on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
+            # on_policy_loss = (1 / (time_steps * batch_size)) * on_policy_loss
 
             # compute off-policy loss (second term in the IPO algorithm loss function)
             """
@@ -403,7 +397,8 @@ def main(num_episodes, gamma, lam, kl_targ, batch_size, env_name):
             plotter.updateOffPolicyLoss(off_policy_loss)
             loss = on_policy_loss + off_policy_loss
 
-            print("on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, loss))
+            print(
+                "on_policy_loss: {}. Off_policy_loss: {}. Total Loss: {}".format(on_policy_loss, off_policy_loss, loss))
             print("")
 
             """update current policy based on current observes, actions, advantages"""

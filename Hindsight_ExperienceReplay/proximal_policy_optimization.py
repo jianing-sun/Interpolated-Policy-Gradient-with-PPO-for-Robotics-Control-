@@ -151,6 +151,10 @@ class OnPolicyPPO(object):
         self.sess = tf.Session(graph=self.g)
         self.sess.run(self.init)
 
+    def getMean(self, obs):
+        feed_dict = {self.obs_ph: obs}
+        return self.sess.run(self.means, feed_dict=feed_dict)
+
     def sample(self, obs):
         """Draw sample from policy distribution"""
         feed_dict = {self.obs_ph: obs}
